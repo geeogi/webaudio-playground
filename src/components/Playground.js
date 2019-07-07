@@ -1,18 +1,20 @@
 import styled from "styled-components";
-import { BACKGROUND_COLOR, CONTRAST_COLOR } from "../assets/colors";
+import { CONTRAST_COLOR } from "../assets/colors";
 
 const PlaygroundContainer = styled.div`
-  background-color: ${BACKGROUND_COLOR};
   color: ${CONTRAST_COLOR};
   box-sizing: border-box;
-  border: solid 4px #444;
-  height: 100vh;
+  min-height: 100vh;
   display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
+  padding: 8px;
   > * {
-    margin: 8px;
+    margin: auto 8px;
+  }
+  > *:first-child {
+    margin-left: auto;
+  }
+  > *:last-child {
+    margin-right: auto;
   }
 `;
 

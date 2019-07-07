@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { AudioNodeElement } from "./components/AudioNodeElement";
 import { Playground } from "./components/Playground";
+import { H1 } from "./components/base";
 
 function App() {
   // Meta
@@ -160,198 +161,201 @@ function App() {
   };
 
   return (
-    <Playground>
-      <AudioNodeElement title={"Source"} id={"<audio>"}>
-        <audio src="viper.mp3" type="audio/mpeg" onCanPlayThrough={setup} />
-        <button onClick={handlePlayPause} disabled={!audioContext}>
-          <span>Play/Pause</span>
-        </button>
-      </AudioNodeElement>
-      <AudioNodeElement
-        bypassed={nodes && nodes.waveShaperNode.bypass}
-        title={"WaveShaper"}
-        id={"waveShaperNode"}
-        setBypass={setBypass}
-      />
-      <AudioNodeElement
-        bypassed={nodes && nodes.dynamicsCompressorNode.bypass}
-        title={"Compressor"}
-        id={"dynamicsCompressorNode"}
-        setBypass={setBypass}
-      >
-        <label htmlFor="attack">Attack</label>
-        <input
-          name="attack"
-          type="range"
-          min="0"
-          max="1"
-          defaultValue="0.003"
-          step="0.01"
-          onChange={handleDynamicsCompressorChange}
+    <>
+      <H1>Webaudio API</H1>
+      <Playground>
+        <AudioNodeElement title={"Source"} id={"<audio>"}>
+          <audio src="viper.mp3" type="audio/mpeg" onCanPlayThrough={setup} />
+          <button onClick={handlePlayPause} disabled={!audioContext}>
+            <span>Play/Pause</span>
+          </button>
+        </AudioNodeElement>
+        <AudioNodeElement
+          bypassed={nodes && nodes.waveShaperNode.bypass}
+          title={"WaveShaper"}
+          id={"waveShaperNode"}
+          setBypass={setBypass}
         />
-        <label htmlFor="knee">Knee</label>
-        <input
-          name="knee"
-          type="range"
-          min="0"
-          max="40"
-          defaultValue="30"
-          step="0.01"
-          onChange={handleDynamicsCompressorChange}
+        <AudioNodeElement
+          bypassed={nodes && nodes.dynamicsCompressorNode.bypass}
+          title={"Compressor"}
+          id={"dynamicsCompressorNode"}
+          setBypass={setBypass}
+        >
+          <label htmlFor="attack">Attack</label>
+          <input
+            name="attack"
+            type="range"
+            min="0"
+            max="1"
+            defaultValue="0.003"
+            step="0.01"
+            onChange={handleDynamicsCompressorChange}
+          />
+          <label htmlFor="knee">Knee</label>
+          <input
+            name="knee"
+            type="range"
+            min="0"
+            max="40"
+            defaultValue="30"
+            step="0.01"
+            onChange={handleDynamicsCompressorChange}
+          />
+          <label htmlFor="ratio">Ratio</label>
+          <input
+            name="ratio"
+            type="range"
+            min="1"
+            max="20"
+            defaultValue="12"
+            step="0.01"
+            onChange={handleDynamicsCompressorChange}
+          />
+          <label htmlFor="release">Release</label>
+          <input
+            name="release"
+            type="range"
+            min="0"
+            max="1"
+            defaultValue="0.25"
+            step="0.01"
+            onChange={handleDynamicsCompressorChange}
+          />
+          <label htmlFor="threshold">Threshold</label>
+          <input
+            name="threshold"
+            type="range"
+            min="-100"
+            max="0"
+            defaultValue="-24"
+            step="0.01"
+            onChange={handleDynamicsCompressorChange}
+          />
+        </AudioNodeElement>
+        <AudioNodeElement
+          bypassed={nodes && nodes.gainNode.bypass}
+          title={"Gain"}
+          id={"gainNode"}
+          setBypass={setBypass}
+        >
+          <label htmlFor="gain">Gain</label>
+          <input
+            name="gain"
+            type="range"
+            min="0"
+            max="3"
+            defaultValue="1"
+            step="0.01"
+            onChange={handleGainChange}
+          />
+        </AudioNodeElement>
+        <AudioNodeElement
+          bypassed={nodes && nodes.biquadFilterNode.bypass}
+          title={"Filter"}
+          id={"biquadFilterNode"}
+          setBypass={setBypass}
+        >
+          <label htmlFor="type">Type</label>
+          <select name="type" onChange={handleFilterTypeChange}>
+            <option>lowpass</option>
+            <option>highpass</option>
+            <option>lowshelf</option>
+            <option>highshelf</option>
+            <option>bandpass</option>
+            <option>allpass</option>
+          </select>
+          <label htmlFor="frequency">Frequency</label>
+          <input
+            name="frequency"
+            type="range"
+            min="0"
+            max="40000"
+            defaultValue="350"
+            step="0.01"
+            onChange={handleFilterFrequencyChange}
+          />
+          <label htmlFor="q">Q</label>
+          <input
+            name="q"
+            type="range"
+            min="0"
+            max="20"
+            defaultValue="1"
+            step="0.01"
+            onChange={handleFilterQChange}
+          />
+        </AudioNodeElement>
+        <AudioNodeElement
+          bypassed={nodes && nodes.convolverNode.bypass}
+          title={"Reverb"}
+          id={"convolverNode"}
+          setBypass={setBypass}
         />
-        <label htmlFor="ratio">Ratio</label>
-        <input
-          name="ratio"
-          type="range"
-          min="1"
-          max="20"
-          defaultValue="12"
-          step="0.01"
-          onChange={handleDynamicsCompressorChange}
-        />
-        <label htmlFor="release">Release</label>
-        <input
-          name="release"
-          type="range"
-          min="0"
-          max="1"
-          defaultValue="0.25"
-          step="0.01"
-          onChange={handleDynamicsCompressorChange}
-        />
-        <label htmlFor="threshold">Threshold</label>
-        <input
-          name="threshold"
-          type="range"
-          min="-100"
-          max="0"
-          defaultValue="-24"
-          step="0.01"
-          onChange={handleDynamicsCompressorChange}
-        />
-      </AudioNodeElement>
-      <AudioNodeElement
-        bypassed={nodes && nodes.gainNode.bypass}
-        title={"Gain"}
-        id={"gainNode"}
-        setBypass={setBypass}
-      >
-        <label htmlFor="gain">Gain</label>
-        <input
-          name="gain"
-          type="range"
-          min="0"
-          max="3"
-          defaultValue="1"
-          step="0.01"
-          onChange={handleGainChange}
-        />
-      </AudioNodeElement>
-      <AudioNodeElement
-        bypassed={nodes && nodes.biquadFilterNode.bypass}
-        title={"Filter"}
-        id={"biquadFilterNode"}
-        setBypass={setBypass}
-      >
-        <label htmlFor="type">Type</label>
-        <select name="type" onChange={handleFilterTypeChange}>
-          <option>lowpass</option>
-          <option>highpass</option>
-          <option>lowshelf</option>
-          <option>highshelf</option>
-          <option>bandpass</option>
-          <option>allpass</option>
-        </select>
-        <label htmlFor="frequency">Frequency</label>
-        <input
-          name="frequency"
-          type="range"
-          min="0"
-          max="40000"
-          defaultValue="350"
-          step="0.01"
-          onChange={handleFilterFrequencyChange}
-        />
-        <label htmlFor="q">Q</label>
-        <input
-          name="q"
-          type="range"
-          min="0"
-          max="20"
-          defaultValue="1"
-          step="0.01"
-          onChange={handleFilterQChange}
-        />
-      </AudioNodeElement>
-      <AudioNodeElement
-        bypassed={nodes && nodes.convolverNode.bypass}
-        title={"Reverb"}
-        id={"convolverNode"}
-        setBypass={setBypass}
-      />
-      <AudioNodeElement
-        bypassed={nodes && nodes.pannerNode.bypass}
-        title={"Panner"}
-        id={"pannerNode"}
-        setBypass={setBypass}
-      >
-        <label htmlFor="x">x-position</label>
-        <input
-          name="x"
-          type="range"
-          min="-1"
-          max="1"
-          step="0.01"
-          onChange={handlePannerPositionChange}
-        />
-        <label htmlFor="y">y-position</label>
-        <input
-          name="y"
-          type="range"
-          min="-1"
-          max="1"
-          step="0.01"
-          onChange={handlePannerPositionChange}
-        />
-        <label htmlFor="z">z-position</label>
-        <input
-          name="z"
-          type="range"
-          min="-1"
-          max="1"
-          step="0.01"
-          onChange={handlePannerPositionChange}
-        />
+        <AudioNodeElement
+          bypassed={nodes && nodes.pannerNode.bypass}
+          title={"Panner"}
+          id={"pannerNode"}
+          setBypass={setBypass}
+        >
+          <label htmlFor="x">x-position</label>
+          <input
+            name="x"
+            type="range"
+            min="-1"
+            max="1"
+            step="0.01"
+            onChange={handlePannerPositionChange}
+          />
+          <label htmlFor="y">y-position</label>
+          <input
+            name="y"
+            type="range"
+            min="-1"
+            max="1"
+            step="0.01"
+            onChange={handlePannerPositionChange}
+          />
+          <label htmlFor="z">z-position</label>
+          <input
+            name="z"
+            type="range"
+            min="-1"
+            max="1"
+            step="0.01"
+            onChange={handlePannerPositionChange}
+          />
 
-        <label htmlFor="x">x-orientation</label>
-        <input
-          name="x"
-          type="range"
-          min="-1"
-          max="1"
-          step="0.01"
-          onChange={handlePannerOrientationChange}
-        />
-        <label htmlFor="y">y-orientation</label>
-        <input
-          name="y"
-          type="range"
-          min="-1"
-          max="1"
-          step="0.01"
-          onChange={handlePannerOrientationChange}
-        />
-        <label htmlFor="z">z-orientation</label>
-        <input
-          name="z"
-          type="range"
-          min="-1"
-          max="1"
-          step="0.01"
-          onChange={handlePannerOrientationChange}
-        />
-      </AudioNodeElement>
-    </Playground>
+          <label htmlFor="x">x-orientation</label>
+          <input
+            name="x"
+            type="range"
+            min="-1"
+            max="1"
+            step="0.01"
+            onChange={handlePannerOrientationChange}
+          />
+          <label htmlFor="y">y-orientation</label>
+          <input
+            name="y"
+            type="range"
+            min="-1"
+            max="1"
+            step="0.01"
+            onChange={handlePannerOrientationChange}
+          />
+          <label htmlFor="z">z-orientation</label>
+          <input
+            name="z"
+            type="range"
+            min="-1"
+            max="1"
+            step="0.01"
+            onChange={handlePannerOrientationChange}
+          />
+        </AudioNodeElement>
+      </Playground>
+    </>
   );
 }
 
