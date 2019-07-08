@@ -1,7 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { AudioNodeElement } from "./components/AudioNodeElement";
-import { Playground } from "./components/Playground";
-import { H1 } from "./components/base";
+import { H1 } from "./components/util/base";
+import { Playground } from "./components/util/Playground";
+import { BiquadFilterComponent } from "./components/webaudio/biquadFilter";
+import { ConvolverNodeComponent } from "./components/webaudio/convolverNode";
+import { DynamicsCompressorComponent } from "./components/webaudio/dynamicsCompressor";
+import { GainNodeComponent } from "./components/webaudio/gainNode";
+import { PannerNodeComponent } from "./components/webaudio/pannerNode";
+import { SourceComponent } from "./components/webaudio/source";
+import { WaveShaperComponent } from "./components/webaudio/waveshaper";
 
 function App() {
   // Meta
@@ -9,6 +15,7 @@ function App() {
   let [nodes, setNodes] = useState(null);
   let [audioContext, setAudioContext] = useState(null);
 
+  // This function creates the audio nodes
   const setup = () => {
     // Init AudioContext and audio source
     const AudioContext = window.AudioContext || window.webkitAudioContext;
@@ -18,16 +25,12 @@ function App() {
 
     // Create waveShaperNode
     const waveShaperNode = audioContext.createWaveShaper();
-    var k = typeof 400 === "number" ? 400 : 50,
-      n_samples = 44100,
-      curve = new Float32Array(n_samples),
-      deg = Math.PI / 180,
-      i = 0,
-      x;
-    for (; i < n_samples; ++i) {
-      x = (i * 2) / n_samples - 1;
-      curve[i] = ((3 + k) * x * 20 * deg) / (Math.PI + k * Math.abs(x));
-    }
+    let curve = new Float32Array(256);
+    curve.forEach((_, i) => {
+      let x = (i * 2) / 256 - 1;
+      curve[i] = ((Math.PI + 15) * x) / (Math.PI + 15 * Math.abs(x));
+    });
+
     waveShaperNode.curve = curve;
     waveShaperNode.oversample = "4x";
 
@@ -56,7 +59,7 @@ function App() {
     // Create pannerNode
     const pannerNode = audioContext.createPanner();
 
-    // Update state
+    // Keep nodes and audio context in state
     setAudioContext(audioContext);
     setNodes({
       source: { instance: source, position: 0 },
@@ -78,22 +81,21 @@ function App() {
     });
   };
 
+  // This function builds the audio node graph each time "nodes" is set
   useEffect(() => {
     if (nodes) {
-      // Create array of nodes and order them by position
+      // Map nodes object to an array ordered by node position
       let nodeArray = Object.values(nodes).sort(
         (a, b) => a.position > b.position
       );
       // Replace "bypassed" nodes with a gain node
       nodeArray = nodeArray.map(node =>
-        node.bypass
-          ? { instance: audioContext.createGain(), position: node.position }
-          : node
+        node.bypass ? { ...node, instance: audioContext.createGain() } : node
       );
-      // Build audio graph
+      // Build audio node graph
       nodeArray.forEach((node, index) => {
         if (index < nodeArray.length - 1) {
-          // Remove node's output connections if they exist
+          // Remove any existing output connections
           node.instance.disconnect();
           // Connect node to consecutive node
           node.instance.connect(nodeArray[index + 1].instance);
@@ -102,258 +104,48 @@ function App() {
     }
   }, [audioContext, nodes]);
 
-  const handlePlayPause = () => {
-    const audioElement = document.querySelector("audio");
-    if (audioContext.state === "suspended") {
-      audioContext.resume();
-    }
-    if (!isPlaying) {
-      audioElement.play();
-      setIsPlaying(true);
-    } else {
-      audioElement.pause();
-      setIsPlaying(false);
-    }
-  };
-
+  // Util method for setting the bypass flag of a node
   const setBypass = (nodeId, shouldBypass) => {
     const newNodes = { ...nodes };
     newNodes[nodeId].bypass = shouldBypass;
     setNodes(newNodes);
   };
 
-  const handleGainChange = e => {
-    nodes.gainNode.instance.gain.value = e.target.value;
-  };
-
-  const handleDynamicsCompressorChange = e => {
-    nodes.dynamicsCompressorNode.instance[e.target.name].value = e.target.value;
-  };
-
-  const handleFilterFrequencyChange = e => {
-    nodes.biquadFilterNode.instance.frequency.value = e.target.value;
-  };
-  const handleFilterQChange = e => {
-    nodes.biquadFilterNode.instance.Q.value = e.target.value;
-  };
-  const handleFilterTypeChange = e => {
-    nodes.biquadFilterNode.instance.type = e.target.value;
-  };
-
-  let [position, setPosition] = useState({ x: 0, y: 0, z: 0 });
-  const handlePannerPositionChange = e => {
-    const newPosition = { ...position };
-    newPosition[e.target.name] = e.target.value;
-    setPosition(newPosition);
-    nodes.pannerNode.instance.setPosition(position.x, position.y, position.z);
-  };
-
-  let [orientation, setOrientation] = useState({ x: 0, y: 0, z: 0 });
-  const handlePannerOrientationChange = e => {
-    const newOrientation = { ...orientation };
-    newOrientation[e.target.name] = e.target.value;
-    setOrientation(newOrientation);
-    nodes.pannerNode.instance.setOrientation(
-      orientation.x,
-      orientation.y,
-      orientation.z
-    );
-  };
-
   return (
     <>
       <H1>Webaudio API</H1>
       <Playground>
-        <AudioNodeElement title={"Source"} id={"<audio>"}>
-          <audio src="viper.mp3" type="audio/mpeg" onCanPlayThrough={setup} />
-          <button onClick={handlePlayPause} disabled={!audioContext}>
-            <span>Play/Pause</span>
-          </button>
-        </AudioNodeElement>
-        <AudioNodeElement
-          bypassed={nodes && nodes.waveShaperNode.bypass}
-          title={"WaveShaper"}
-          id={"waveShaperNode"}
+        <SourceComponent
+          setup={setup}
+          isPlaying={isPlaying}
+          audioContext={audioContext}
+          setIsPlaying={setIsPlaying}
+        />
+        <WaveShaperComponent
+          waveShaperNode={nodes && nodes.waveShaperNode}
           setBypass={setBypass}
         />
-        <AudioNodeElement
-          bypassed={nodes && nodes.dynamicsCompressorNode.bypass}
-          title={"Compressor"}
-          id={"dynamicsCompressorNode"}
-          setBypass={setBypass}
-        >
-          <label htmlFor="attack">Attack</label>
-          <input
-            name="attack"
-            type="range"
-            min="0"
-            max="1"
-            defaultValue="0.003"
-            step="0.01"
-            onChange={handleDynamicsCompressorChange}
-          />
-          <label htmlFor="knee">Knee</label>
-          <input
-            name="knee"
-            type="range"
-            min="0"
-            max="40"
-            defaultValue="30"
-            step="0.01"
-            onChange={handleDynamicsCompressorChange}
-          />
-          <label htmlFor="ratio">Ratio</label>
-          <input
-            name="ratio"
-            type="range"
-            min="1"
-            max="20"
-            defaultValue="12"
-            step="0.01"
-            onChange={handleDynamicsCompressorChange}
-          />
-          <label htmlFor="release">Release</label>
-          <input
-            name="release"
-            type="range"
-            min="0"
-            max="1"
-            defaultValue="0.25"
-            step="0.01"
-            onChange={handleDynamicsCompressorChange}
-          />
-          <label htmlFor="threshold">Threshold</label>
-          <input
-            name="threshold"
-            type="range"
-            min="-100"
-            max="0"
-            defaultValue="-24"
-            step="0.01"
-            onChange={handleDynamicsCompressorChange}
-          />
-        </AudioNodeElement>
-        <AudioNodeElement
-          bypassed={nodes && nodes.gainNode.bypass}
-          title={"Gain"}
-          id={"gainNode"}
-          setBypass={setBypass}
-        >
-          <label htmlFor="gain">Gain</label>
-          <input
-            name="gain"
-            type="range"
-            min="0"
-            max="3"
-            defaultValue="1"
-            step="0.01"
-            onChange={handleGainChange}
-          />
-        </AudioNodeElement>
-        <AudioNodeElement
-          bypassed={nodes && nodes.biquadFilterNode.bypass}
-          title={"Filter"}
-          id={"biquadFilterNode"}
-          setBypass={setBypass}
-        >
-          <label htmlFor="type">Type</label>
-          <select name="type" onChange={handleFilterTypeChange}>
-            <option>lowpass</option>
-            <option>highpass</option>
-            <option>lowshelf</option>
-            <option>highshelf</option>
-            <option>bandpass</option>
-            <option>allpass</option>
-          </select>
-          <label htmlFor="frequency">Frequency</label>
-          <input
-            name="frequency"
-            type="range"
-            min="0"
-            max="40000"
-            defaultValue="350"
-            step="0.01"
-            onChange={handleFilterFrequencyChange}
-          />
-          <label htmlFor="q">Q</label>
-          <input
-            name="q"
-            type="range"
-            min="0"
-            max="20"
-            defaultValue="1"
-            step="0.01"
-            onChange={handleFilterQChange}
-          />
-        </AudioNodeElement>
-        <AudioNodeElement
-          bypassed={nodes && nodes.convolverNode.bypass}
-          title={"Reverb"}
-          id={"convolverNode"}
+        <DynamicsCompressorComponent
+          dynamicsCompressorNode={nodes && nodes.dynamicsCompressorNode}
           setBypass={setBypass}
         />
-        <AudioNodeElement
-          bypassed={nodes && nodes.pannerNode.bypass}
-          title={"Panner"}
-          id={"pannerNode"}
+        <GainNodeComponent
+          gainNode={nodes && nodes.gainNode}
           setBypass={setBypass}
-        >
-          <label htmlFor="x">x-position</label>
-          <input
-            name="x"
-            type="range"
-            min="-1"
-            max="1"
-            step="0.01"
-            onChange={handlePannerPositionChange}
-          />
-          <label htmlFor="y">y-position</label>
-          <input
-            name="y"
-            type="range"
-            min="-1"
-            max="1"
-            step="0.01"
-            onChange={handlePannerPositionChange}
-          />
-          <label htmlFor="z">z-position</label>
-          <input
-            name="z"
-            type="range"
-            min="-1"
-            max="1"
-            step="0.01"
-            onChange={handlePannerPositionChange}
-          />
+        />
 
-          <label htmlFor="x">x-orientation</label>
-          <input
-            name="x"
-            type="range"
-            min="-1"
-            max="1"
-            step="0.01"
-            onChange={handlePannerOrientationChange}
-          />
-          <label htmlFor="y">y-orientation</label>
-          <input
-            name="y"
-            type="range"
-            min="-1"
-            max="1"
-            step="0.01"
-            onChange={handlePannerOrientationChange}
-          />
-          <label htmlFor="z">z-orientation</label>
-          <input
-            name="z"
-            type="range"
-            min="-1"
-            max="1"
-            step="0.01"
-            onChange={handlePannerOrientationChange}
-          />
-        </AudioNodeElement>
+        <BiquadFilterComponent
+          biquadFilterNode={nodes && nodes.biquadFilterNode}
+          setBypass={setBypass}
+        />
+        <ConvolverNodeComponent
+          convolverNode={nodes && nodes.convolverNode}
+          setBypass={setBypass}
+        />
+        <PannerNodeComponent
+          pannerNode={nodes && nodes.pannerNode}
+          setBypass={setBypass}
+        />
       </Playground>
     </>
   );

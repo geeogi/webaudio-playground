@@ -1,6 +1,11 @@
 import React from "react";
 import styled from "styled-components";
-import { DARK_COLOR, LIGHT_COLOR, BACKGROUND_COLOR } from "../assets/colors";
+import {
+  DARK_COLOR,
+  LIGHT_COLOR,
+  SECONDARY_CONTRAST_COLOR
+} from "../../assets/colors";
+import { Checkbox } from "./base";
 
 const AudioNodeElementContainer = styled.div`
   min-width: 180px;
@@ -22,7 +27,7 @@ const AudioNodeElementContainer = styled.div`
   > label {
     font-weight: bold;
     font-style: italic;
-    color: ${BACKGROUND_COLOR};
+    color: ${SECONDARY_CONTRAST_COLOR};
     margin: 16px 0px;
   }
 `;
@@ -34,8 +39,7 @@ export const AudioNodeElement = props => {
       <h6>{props.id}</h6>
       {props.setBypass && (
         <>
-          <label htmlFor="enabled">Enabled</label>
-          <input
+          <Checkbox
             name="enabled"
             type="checkbox"
             checked={!props.bypassed}

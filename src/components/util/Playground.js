@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { CONTRAST_COLOR } from "../assets/colors";
+import { CONTRAST_COLOR } from "../../assets/colors";
 
 const PlaygroundContainer = styled.div`
   color: ${CONTRAST_COLOR};
