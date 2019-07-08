@@ -38,14 +38,12 @@ export const AudioNodeElement = props => {
       <h3>{props.title}</h3>
       <h6>{props.id}</h6>
       {props.setBypass && (
-        <>
-          <Checkbox
-            name="enabled"
-            type="checkbox"
-            checked={!props.bypassed}
-            onChange={e => props.setBypass(props.id, !e.target.checked)}
-          />
-        </>
+        <Checkbox
+          name="enabled"
+          type="checkbox"
+          checked={!props.bypassed}
+          onChange={e => props.setBypass(props.id, !e.target.checked)}
+        />
       )}
       {props.children}
     </AudioNodeElementContainer>
