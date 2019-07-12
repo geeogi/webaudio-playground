@@ -3,8 +3,11 @@ import { AudioNodeElement } from "../util/AudioNodeElement";
 
 export const SourceComponent = props => {
   const handlePlayPause = () => {
+    if (!props.audioContext) {
+      props.setup();
+    }
     const audioElement = document.querySelector("audio");
-    if (props.audioContext.state === "suspended") {
+    if (props.audioContext && props.audioContext.state === "suspended") {
       props.audioContext.resume();
     }
     if (!props.isPlaying) {
@@ -17,8 +20,8 @@ export const SourceComponent = props => {
   };
   return (
     <AudioNodeElement title={"Source"} id={"<audio>"}>
-      <audio src="viper.mp3" type="audio/mpeg" onCanPlayThrough={props.setup} />
-      <button onClick={handlePlayPause} disabled={!props.audioContext}>
+      <audio src="viper.mp3" type="audio/mpeg" />
+      <button onClick={handlePlayPause}>
         <span>Play/Pause</span>
       </button>
     </AudioNodeElement>
