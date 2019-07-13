@@ -19,7 +19,12 @@ export const SourceComponent = props => {
     }
   };
   return (
-    <AudioNodeElement title={"Source"} id={"<audio>"}>
+    <AudioNodeElement
+      disabled={props.disabled}
+      bypassed={!props.isPlaying}
+      title={"Source"}
+      id={"<audio>"}
+    >
       <audio src="viper.mp3" type="audio/mpeg" />
       <button onClick={handlePlayPause}>
         <span>Play/Pause</span>

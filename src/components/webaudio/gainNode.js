@@ -7,13 +7,15 @@ export const GainNodeComponent = props => {
   };
   return (
     <AudioNodeElement
+      disabled={props.disabled}
       bypassed={props.gainNode && props.gainNode.bypass}
       title={"Gain"}
       id={"gainNode"}
       setBypass={props.setBypass}
     >
-      <label htmlFor="gain">Gain</label>
+      <label htmlFor="gain">Gain:</label>
       <input
+        disabled={props.disabled}
         name="gain"
         type="range"
         min="0"

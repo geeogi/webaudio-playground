@@ -9,6 +9,7 @@ const PlaygroundContainer = styled.div`
   padding: 8px;
   > * {
     margin: auto 8px;
+    transition: opacity 100ms linear;
   }
   > *:first-child {
     margin-left: auto;

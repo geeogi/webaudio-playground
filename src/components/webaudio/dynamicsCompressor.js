@@ -8,6 +8,7 @@ export const DynamicsCompressorComponent = props => {
 
   return (
     <AudioNodeElement
+      disabled={props.disabled}
       bypassed={
         props.dynamicsCompressorNode && props.dynamicsCompressorNode.bypass
       }
@@ -15,8 +16,9 @@ export const DynamicsCompressorComponent = props => {
       id={"dynamicsCompressorNode"}
       setBypass={props.setBypass}
     >
-      <label htmlFor="attack">Attack</label>
+      <label htmlFor="attack">Attack:</label>
       <input
+        disabled={props.disabled}
         name="attack"
         type="range"
         min="0"
@@ -25,8 +27,9 @@ export const DynamicsCompressorComponent = props => {
         step="0.01"
         onChange={handleDynamicsCompressorChange}
       />
-      <label htmlFor="knee">Knee</label>
+      <label htmlFor="knee">Knee:</label>
       <input
+        disabled={props.disabled}
         name="knee"
         type="range"
         min="0"
@@ -35,8 +38,9 @@ export const DynamicsCompressorComponent = props => {
         step="0.01"
         onChange={handleDynamicsCompressorChange}
       />
-      <label htmlFor="ratio">Ratio</label>
+      <label htmlFor="ratio">Ratio:</label>
       <input
+        disabled={props.disabled}
         name="ratio"
         type="range"
         min="1"
@@ -45,8 +49,9 @@ export const DynamicsCompressorComponent = props => {
         step="0.01"
         onChange={handleDynamicsCompressorChange}
       />
-      <label htmlFor="release">Release</label>
+      <label htmlFor="release">Release:</label>
       <input
+        disabled={props.disabled}
         name="release"
         type="range"
         min="0"
@@ -55,8 +60,9 @@ export const DynamicsCompressorComponent = props => {
         step="0.01"
         onChange={handleDynamicsCompressorChange}
       />
-      <label htmlFor="threshold">Threshold</label>
+      <label htmlFor="threshold">Threshold:</label>
       <input
+        disabled={props.disabled}
         name="threshold"
         type="range"
         min="-100"

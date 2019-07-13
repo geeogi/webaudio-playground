@@ -13,13 +13,18 @@ export const BiquadFilterComponent = props => {
   };
   return (
     <AudioNodeElement
+      disabled={props.disabled}
       bypassed={props.biquadFilterNode && props.biquadFilterNode.bypass}
       title={"Filter"}
       id={"biquadFilterNode"}
       setBypass={props.setBypass}
     >
-      <label htmlFor="type">Type</label>
-      <select name="type" onChange={handleFilterTypeChange}>
+      <label htmlFor="type">Type:</label>
+      <select
+        disabled={props.disabled}
+        name="type"
+        onChange={handleFilterTypeChange}
+      >
         <option>lowpass</option>
         <option>highpass</option>
         <option>lowshelf</option>
@@ -27,8 +32,9 @@ export const BiquadFilterComponent = props => {
         <option>bandpass</option>
         <option>allpass</option>
       </select>
-      <label htmlFor="frequency">Frequency</label>
+      <label htmlFor="frequency">Frequency:</label>
       <input
+        disabled={props.disabled}
         name="frequency"
         type="range"
         min="0"
@@ -37,8 +43,9 @@ export const BiquadFilterComponent = props => {
         step="0.01"
         onChange={handleFilterFrequencyChange}
       />
-      <label htmlFor="q">Q</label>
+      <label htmlFor="q">Q:</label>
       <input
+        disabled={props.disabled}
         name="q"
         type="range"
         min="0"

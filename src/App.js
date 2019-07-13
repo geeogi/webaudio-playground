@@ -122,27 +122,33 @@ function App() {
           setIsPlaying={setIsPlaying}
         />
         <WaveShaperComponent
+          disabled={!audioContext}
           waveShaperNode={nodes && nodes.waveShaperNode}
           setBypass={setBypass}
         />
         <DynamicsCompressorComponent
+          disabled={!audioContext}
           dynamicsCompressorNode={nodes && nodes.dynamicsCompressorNode}
           setBypass={setBypass}
         />
         <GainNodeComponent
+          disabled={!audioContext}
           gainNode={nodes && nodes.gainNode}
           setBypass={setBypass}
         />
 
         <BiquadFilterComponent
+          disabled={!audioContext}
           biquadFilterNode={nodes && nodes.biquadFilterNode}
           setBypass={setBypass}
         />
         <ConvolverNodeComponent
+          disabled={!audioContext}
           convolverNode={nodes && nodes.convolverNode}
           setBypass={setBypass}
         />
         <PannerNodeComponent
+          disabled={!audioContext}
           pannerNode={nodes && nodes.pannerNode}
           setBypass={setBypass}
         />

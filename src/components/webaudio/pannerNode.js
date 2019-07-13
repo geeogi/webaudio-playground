@@ -24,13 +24,15 @@ export const PannerNodeComponent = props => {
   };
   return (
     <AudioNodeElement
+      disabled={props.disabled}
       bypassed={props.pannerNode && props.pannerNode.bypass}
       title={"Panner"}
       id={"pannerNode"}
       setBypass={props.setBypass}
     >
-      <label htmlFor="x">x-position</label>
+      <label htmlFor="x">x-position:</label>
       <input
+        disabled={props.disabled}
         name="x"
         type="range"
         min="-1"
@@ -38,8 +40,9 @@ export const PannerNodeComponent = props => {
         step="0.01"
         onChange={handlePannerPositionChange}
       />
-      <label htmlFor="y">y-position</label>
+      <label htmlFor="y">y-position:</label>
       <input
+        disabled={props.disabled}
         name="y"
         type="range"
         min="-1"
@@ -47,8 +50,9 @@ export const PannerNodeComponent = props => {
         step="0.01"
         onChange={handlePannerPositionChange}
       />
-      <label htmlFor="z">z-position</label>
+      <label htmlFor="z">z-position:</label>
       <input
+        disabled={props.disabled}
         name="z"
         type="range"
         min="-1"
@@ -57,8 +61,9 @@ export const PannerNodeComponent = props => {
         onChange={handlePannerPositionChange}
       />
 
-      <label htmlFor="x">x-orientation</label>
+      <label htmlFor="x">x-orientation:</label>
       <input
+        disabled={props.disabled}
         name="x"
         type="range"
         min="-1"
@@ -66,8 +71,9 @@ export const PannerNodeComponent = props => {
         step="0.01"
         onChange={handlePannerOrientationChange}
       />
-      <label htmlFor="y">y-orientation</label>
+      <label htmlFor="y">y-orientation:</label>
       <input
+        disabled={props.disabled}
         name="y"
         type="range"
         min="-1"
@@ -75,8 +81,9 @@ export const PannerNodeComponent = props => {
         step="0.01"
         onChange={handlePannerOrientationChange}
       />
-      <label htmlFor="z">z-orientation</label>
+      <label htmlFor="z">z-orientation:</label>
       <input
+        disabled={props.disabled}
         name="z"
         type="range"
         min="-1"
