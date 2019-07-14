@@ -85,20 +85,26 @@ function App() {
   useEffect(() => {
     if (nodes) {
       // Map nodes object to an array ordered by node position
-      let nodeArray = Object.values(nodes).sort(
+      const nodeArray = Object.values(nodes).sort(
         (a, b) => a.position > b.position
-      );
-      // Replace "bypassed" nodes with a gain node
-      nodeArray = nodeArray.map(node =>
-        node.bypass ? { ...node, instance: audioContext.createGain() } : node
       );
       // Build audio node graph
       nodeArray.forEach((node, index) => {
-        if (index < nodeArray.length - 1) {
           // Remove any existing output connections
+        if (node.instance.numberOfOutputs > 0) {
           node.instance.disconnect();
-          // Connect node to consecutive node
-          node.instance.connect(nodeArray[index + 1].instance);
+        }
+        // Skip bypassed nodes
+        if (!node.bypass) {
+          // Skip last node
+          if (!(index === nodeArray.length - 1)) {
+            // Find the next non-bypassed node
+            const nextNode = nodeArray.find(({ bypass, position }) => {
+              return !bypass && position > node.position;
+            });
+            // Connect node to the next non-bypassed node
+            node.instance.connect(nextNode.instance);
+          }
         }
       });
     }
