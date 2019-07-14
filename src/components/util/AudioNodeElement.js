@@ -16,7 +16,7 @@ const AudioNodeElementContainer = styled.div`
     ${props => (props.bypassed || props.disabled ? LIGHT_COLOR : ACTIVE_COLOR)};
   border-radius: 4px;
   font-size: 14px;
-  padding: 4px;
+  padding: 8px;
   > * {
     display: block;
   }

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { H1 } from "./components/util/base";
+import { H1 } from "./components/util/H1";
 import { Playground } from "./components/util/Playground";
 import { BiquadFilterComponent } from "./components/webaudio/biquadFilter";
 import { ConvolverNodeComponent } from "./components/webaudio/convolverNode";
@@ -25,6 +25,7 @@ function App() {
 
     // Create analyserNode
     const analyserNode = audioContext.createAnalyser();
+    analyserNode.fftSize = 256;
 
     // Create waveShaperNode
     const waveShaperNode = audioContext.createWaveShaper();
@@ -33,7 +34,6 @@ function App() {
       let x = (i * 2) / 256 - 1;
       curve[i] = ((Math.PI + 15) * x) / (Math.PI + 15 * Math.abs(x));
     });
-
     waveShaperNode.curve = curve;
     waveShaperNode.oversample = "4x";
 
@@ -88,6 +88,13 @@ function App() {
     audioElement.play();
   };
 
+  // Util method for setting the bypass flag of a node
+  const setBypass = (nodeId, shouldBypass) => {
+    const newNodes = { ...nodes };
+    newNodes[nodeId].bypass = shouldBypass;
+    setNodes(newNodes);
+  };
+
   // This function builds the audio node graph each time "nodes" is set
   useEffect(() => {
     if (nodes) {
@@ -115,17 +122,10 @@ function App() {
         }
       });
     }
-  }, [audioContext, nodes]);
-
-  // Util method for setting the bypass flag of a node
-  const setBypass = (nodeId, shouldBypass) => {
-    const newNodes = { ...nodes };
-    newNodes[nodeId].bypass = shouldBypass;
-    setNodes(newNodes);
-  };
+  }, [nodes]);
 
   return (
-    <>
+    <main>
       <H1>Webaudio API</H1>
       <Playground>
         <SourceComponent
@@ -170,7 +170,7 @@ function App() {
           setBypass={setBypass}
         />
       </Playground>
-    </>
+    </main>
   );
 }
 
