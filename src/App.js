@@ -8,10 +8,10 @@ import { GainNodeComponent } from "./components/webaudio/gainNode";
 import { PannerNodeComponent } from "./components/webaudio/pannerNode";
 import { SourceComponent } from "./components/webaudio/source";
 import { WaveShaperComponent } from "./components/webaudio/waveshaper";
+import { AnalyserNodeComponent } from "./components/webaudio/analyser";
 
 function App() {
   // Meta
-  let [isPlaying, setIsPlaying] = useState(false);
   let [nodes, setNodes] = useState(null);
   let [audioContext, setAudioContext] = useState(null);
 
@@ -22,6 +22,9 @@ function App() {
     const audioContext = new AudioContext();
     const audioElement = document.querySelector("audio");
     const source = audioContext.createMediaElementSource(audioElement);
+
+    // Create analyserNode
+    const analyserNode = audioContext.createAnalyser();
 
     // Create waveShaperNode
     const waveShaperNode = audioContext.createWaveShaper();
@@ -63,22 +66,24 @@ function App() {
     setAudioContext(audioContext);
     setNodes({
       source: { instance: source, position: 0 },
-      waveShaperNode: { instance: waveShaperNode, position: 1, bypass: true },
+      analyserNode: { instance: analyserNode, position: 1, bypass: false },
+      waveShaperNode: { instance: waveShaperNode, position: 2, bypass: true },
       dynamicsCompressorNode: {
         instance: dynamicsCompressorNode,
-        position: 2,
+        position: 3,
         bypass: true
       },
-      gainNode: { instance: gainNode, position: 3, bypass: true },
+      gainNode: { instance: gainNode, position: 4, bypass: true },
       biquadFilterNode: {
         instance: biquadFilterNode,
-        position: 4,
+        position: 5,
         bypass: true
       },
-      convolverNode: { instance: convolverNode, position: 5, bypass: true },
-      pannerNode: { instance: pannerNode, position: 6, bypass: true },
-      destination: { instance: audioContext.destination, position: 7 }
+      convolverNode: { instance: convolverNode, position: 6, bypass: true },
+      pannerNode: { instance: pannerNode, position: 7, bypass: true },
+      destination: { instance: audioContext.destination, position: 8 }
     });
+
     // Begin playing
     audioElement.play();
   };
@@ -92,7 +97,7 @@ function App() {
       );
       // Build audio node graph
       nodeArray.forEach((node, index) => {
-          // Remove any existing output connections
+        // Remove any existing output connections
         if (node.instance.numberOfOutputs > 0) {
           node.instance.disconnect();
         }
@@ -125,9 +130,13 @@ function App() {
       <Playground>
         <SourceComponent
           setup={setup}
-          isPlaying={isPlaying}
           audioContext={audioContext}
-          setIsPlaying={setIsPlaying}
+          source={nodes && nodes.source}
+        />
+        <AnalyserNodeComponent
+          disabled={!audioContext}
+          analyserNode={nodes && nodes.analyserNode}
+          setBypass={setBypass}
         />
         <WaveShaperComponent
           disabled={!audioContext}
