@@ -12,8 +12,9 @@ import { AnalyserNodeComponent } from "./components/webaudio/analyser";
 
 function App() {
   // Meta
-  let [nodes, setNodes] = useState(null);
+  let [nodes, setNodes] = useState({});
   let [audioContext, setAudioContext] = useState(null);
+  let [isPlaying, setIsPlaying] = useState(false);
 
   // This function creates the audio nodes
   const setup = () => {
@@ -130,43 +131,46 @@ function App() {
       <Playground>
         <SourceComponent
           setup={setup}
+          isPlaying={isPlaying}
+          setIsPlaying={setIsPlaying}
           audioContext={audioContext}
-          source={nodes && nodes.source}
+          source={nodes.source}
         />
         <AnalyserNodeComponent
+          isActive={isPlaying && !nodes.analyserNode.bypass}
           disabled={!audioContext}
-          analyserNode={nodes && nodes.analyserNode}
+          analyserNode={nodes.analyserNode}
           setBypass={setBypass}
         />
         <WaveShaperComponent
           disabled={!audioContext}
-          waveShaperNode={nodes && nodes.waveShaperNode}
+          waveShaperNode={nodes.waveShaperNode}
           setBypass={setBypass}
         />
         <DynamicsCompressorComponent
           disabled={!audioContext}
-          dynamicsCompressorNode={nodes && nodes.dynamicsCompressorNode}
+          dynamicsCompressorNode={nodes.dynamicsCompressorNode}
           setBypass={setBypass}
         />
         <GainNodeComponent
           disabled={!audioContext}
-          gainNode={nodes && nodes.gainNode}
+          gainNode={nodes.gainNode}
           setBypass={setBypass}
         />
 
         <BiquadFilterComponent
           disabled={!audioContext}
-          biquadFilterNode={nodes && nodes.biquadFilterNode}
+          biquadFilterNode={nodes.biquadFilterNode}
           setBypass={setBypass}
         />
         <ConvolverNodeComponent
           disabled={!audioContext}
-          convolverNode={nodes && nodes.convolverNode}
+          convolverNode={nodes.convolverNode}
           setBypass={setBypass}
         />
         <PannerNodeComponent
           disabled={!audioContext}
-          pannerNode={nodes && nodes.pannerNode}
+          pannerNode={nodes.pannerNode}
           setBypass={setBypass}
         />
       </Playground>

@@ -3,6 +3,7 @@ import { AudioNodeElement } from "../util/AudioNodeElement";
 
 export const AnalyserNodeComponent = props => {
   const [looping, setLooping] = useState(false);
+  const [animationFrameId, setAnimationFrameId] = useState(false);
 
   const [currentMaxVoltage, setCurrentMaxVoltage] = useState(0);
 
@@ -46,32 +47,34 @@ export const AnalyserNodeComponent = props => {
   };
 
   const loop = () => {
-    // Ensure node is initialised and is active
-    if (props.analyserNode && !props.analyserNode.bypass) {
-      const bufferLength = props.analyserNode.instance.frequencyBinCount;
-      const timeDomainDataArray = new Uint8Array(bufferLength);
-      const frequencyDataArray = new Uint8Array(bufferLength);
-      props.analyserNode.instance.getByteTimeDomainData(timeDomainDataArray);
-      props.analyserNode.instance.getByteFrequencyData(frequencyDataArray);
+    const bufferLength = props.analyserNode.instance.frequencyBinCount;
+    const timeDomainDataArray = new Uint8Array(bufferLength);
+    const frequencyDataArray = new Uint8Array(bufferLength);
+    props.analyserNode.instance.getByteTimeDomainData(timeDomainDataArray);
+    props.analyserNode.instance.getByteFrequencyData(frequencyDataArray);
+    // Update graphs
+    updateLevelMeter(timeDomainDataArray);
+    updateFrequencyCanvas(frequencyDataArray);
+    // Loop
+    setLooping(true);
+    const nextAnimationFrameId = requestAnimationFrame(loop);
+    setAnimationFrameId(nextAnimationFrameId);
+  };
 
-      // Update graphs
-      updateLevelMeter(timeDomainDataArray);
-      updateFrequencyCanvas(frequencyDataArray);
-      // Loop
-      requestAnimationFrame(loop);
-      setLooping(true);
-    } else {
+  useEffect(() => {
+    if (!looping && props.isActive) {
+      loop();
+    }
+  });
+
+  useEffect(() => {
+    if (!props.isActive) {
+      cancelAnimationFrame(animationFrameId);
       clearLevelMeter();
       clearFrequencyCanvas();
       setLooping(false);
     }
-  };
-
-  useEffect(() => {
-    if (!looping) {
-      loop();
-    }
-  });
+  }, [animationFrameId, props.isActive]);
 
   return (
     <AudioNodeElement

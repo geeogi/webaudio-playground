@@ -1,9 +1,7 @@
-import React, { useState } from "react";
+import React from "react";
 import { AudioNodeElement } from "../util/AudioNodeElement";
 
 export const SourceComponent = props => {
-  const [isActive, setIsActive] = useState(false);
-
   const handlePlayPause = () => {
     if (!props.audioContext) {
       props.setup();
@@ -11,7 +9,7 @@ export const SourceComponent = props => {
       if (props.audioContext && props.audioContext.state === "suspended") {
         props.audioContext.resume();
       }
-      if (props.source.instance.mediaElement.paused) {
+      if (!props.isPlaying) {
         props.source.instance.mediaElement.play();
       } else {
         props.source.instance.mediaElement.pause();
@@ -22,7 +20,7 @@ export const SourceComponent = props => {
   return (
     <AudioNodeElement
       disabled={props.disabled}
-      bypassed={!isActive}
+      bypassed={!props.isPlaying}
       title={"Source"}
       id={"<audio>"}
     >
@@ -30,8 +28,8 @@ export const SourceComponent = props => {
         src="viper.mp3"
         type="audio/mpeg"
         loop
-        onPlay={() => setIsActive(true)}
-        onPause={() => setIsActive(false)}
+        onPlay={() => props.setIsPlaying(true)}
+        onPause={() => props.setIsPlaying(false)}
       />
       <button onClick={handlePlayPause}>
         <span>Play/Pause</span>
