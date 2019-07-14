@@ -79,6 +79,8 @@ function App() {
       pannerNode: { instance: pannerNode, position: 6, bypass: true },
       destination: { instance: audioContext.destination, position: 7 }
     });
+    // Begin playing
+    audioElement.play();
   };
 
   // This function builds the audio node graph each time "nodes" is set
