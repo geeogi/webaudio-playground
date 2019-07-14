@@ -6,7 +6,6 @@ export const AnalyserNodeComponent = props => {
 
   const [currentMaxVoltage, setCurrentMaxVoltage] = useState(0);
 
-  const waveformCanvas = useRef();
   const frequencyCanvas = useRef();
   const CANVAS_WIDTH = 150;
   const CANVAS_HEIGHT = 40;
@@ -22,29 +21,6 @@ export const AnalyserNodeComponent = props => {
 
   const clearLevelMeter = () => {
     setCurrentMaxVoltage(0);
-  };
-
-  const updateWaveformCanvas = timeDomainDataArray => {
-    if (waveformCanvas) {
-      const context = waveformCanvas.current.getContext("2d");
-      context.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
-      context.beginPath();
-      timeDomainDataArray.forEach((value, index) => {
-        const y = (value / 128) * CANVAS_HEIGHT;
-        const x = index * (CANVAS_WIDTH / timeDomainDataArray.length);
-        if (index === 0) {
-          context.moveTo(x, y);
-        } else {
-          context.lineTo(x, y);
-        }
-      });
-      context.stroke();
-    }
-  };
-
-  const clearWaveformCanvas = () => {
-    const context = waveformCanvas.current.getContext("2d");
-    context.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
   };
 
   const updateFrequencyCanvas = frequencyDataArray => {
@@ -80,14 +56,12 @@ export const AnalyserNodeComponent = props => {
 
       // Update graphs
       updateLevelMeter(timeDomainDataArray);
-      updateWaveformCanvas(timeDomainDataArray);
       updateFrequencyCanvas(frequencyDataArray);
       // Loop
       requestAnimationFrame(loop);
       setLooping(true);
     } else {
       clearLevelMeter();
-      clearWaveformCanvas();
       clearFrequencyCanvas();
       setLooping(false);
     }
@@ -120,13 +94,6 @@ export const AnalyserNodeComponent = props => {
       <canvas
         name="frequency"
         ref={frequencyCanvas}
-        width={CANVAS_WIDTH + "px"}
-        height={CANVAS_HEIGHT + "px"}
-      />
-      <label htmlFor="waveform">Waveform:</label>
-      <canvas
-        name="waveform"
-        ref={waveformCanvas}
         width={CANVAS_WIDTH + "px"}
         height={CANVAS_HEIGHT + "px"}
       />
