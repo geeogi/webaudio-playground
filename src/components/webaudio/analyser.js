@@ -81,9 +81,9 @@ export const AnalyserNodeComponent = props => {
       id={"analyserNode"}
       setBypass={props.setBypass}
     >
-      <label htmlFor="amplititude">Amplititude:</label>
+      <label htmlFor="voltage">Voltage:</label>
       <meter
-        name="amplitude"
+        name="voltage"
         min="0"
         optimum="0.6"
         high="0.95"
