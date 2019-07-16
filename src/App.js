@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { H1 } from "./components/util/H1";
 import { Playground } from "./components/util/Playground";
 import { BiquadFilterComponent } from "./components/webaudio/biquadFilter";
@@ -12,17 +12,19 @@ import { AnalyserComponent } from "./components/webaudio/analyser";
 
 function App() {
   // Meta
-  let [nodes, setNodes] = useState({});
-  let [audioContext, setAudioContext] = useState(null);
-  let [isPlaying, setIsPlaying] = useState(false);
+  const [nodes, setNodes] = useState();
+  const [audioContext, setAudioContext] = useState(null);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const audioElementRef = useRef();
 
   // This function creates the audio nodes
   const setup = () => {
     // Init AudioContext and audio source
     const AudioContext = window.AudioContext || window.webkitAudioContext;
     const audioContext = new AudioContext();
-    const audioElement = document.querySelector("audio");
-    const source = audioContext.createMediaElementSource(audioElement);
+    const sourceNode = audioContext.createMediaElementSource(
+      audioElementRef.current
+    );
 
     // Create analyserNode
     const analyserNode = audioContext.createAnalyser();
@@ -84,9 +86,6 @@ function App() {
       panner: { instance: pannerNode, position: 7, bypass: true },
       destination: { instance: audioContext.destination, position: 8 }
     });
-
-    // Begin playing
-    sourceNode.play();
   };
 
   // Util method for setting the bypass flag of a node
@@ -119,58 +118,78 @@ function App() {
             });
             // Connect node to the next non-bypassed node
             node.instance.connect(nextNode.instance);
+            console.log(node.instance);
           }
         }
       });
     }
   }, [nodes]);
 
+  // Handle play and pause
+  const handlePlay = () => {
+    if (audioContext && audioContext.state === "suspended") {
+      audioContext.resume();
+    }
+    if (nodes && nodes.source) {
+      nodes.source.instance.mediaElement.play();
+    }
+    setIsPlaying(true);
+  };
+
+  const handlePause = () => {
+    nodes.source.instance.mediaElement.pause();
+    setIsPlaying(false);
+  };
+
   return (
     <main>
       <H1>Webaudio API</H1>
       <Playground>
         <SourceComponent
-          setup={setup}
           isPlaying={isPlaying}
-          setIsPlaying={setIsPlaying}
-          audioContext={audioContext}
-          source={nodes.source}
+          handlePlay={handlePlay}
+          handlePause={handlePause}
+          reactRef={audioElementRef}
+          ready={Boolean(nodes)}
+          setup={setup}
         />
         <AnalyserComponent
-          isActive={isPlaying && !nodes.analyserNode.bypass}
+          isActive={
+            isPlaying && nodes && nodes.analyser && !nodes.analyser.bypass
+          }
           disabled={!audioContext}
-          analyserNode={nodes.analyser}
+          analyserNode={nodes && nodes.analyser}
           setBypass={setBypass}
         />
         <WaveShaperComponent
           disabled={!audioContext}
-          waveShaperNode={nodes.waveShaper}
+          waveShaperNode={nodes && nodes.waveShaper}
           setBypass={setBypass}
         />
         <DynamicsCompressorComponent
           disabled={!audioContext}
-          dynamicsCompressorNode={nodes.dynamicsCompressor}
+          dynamicsCompressorNode={nodes && nodes.dynamicsCompressor}
           setBypass={setBypass}
         />
         <GainComponent
           disabled={!audioContext}
-          gainNode={nodes.gain}
+          gainNode={nodes && nodes.gain}
           setBypass={setBypass}
         />
 
         <BiquadFilterComponent
           disabled={!audioContext}
-          biquadFilterNode={nodes.biquadFilter}
+          biquadFilterNode={nodes && nodes.biquadFilter}
           setBypass={setBypass}
         />
         <ConvolverComponent
           disabled={!audioContext}
-          convolverNode={nodes.convolver}
+          convolverNode={nodes && nodes.convolver}
           setBypass={setBypass}
         />
         <PannerComponent
           disabled={!audioContext}
-          pannerNode={nodes.panner}
+          pannerNode={nodes && nodes.panner}
           setBypass={setBypass}
         />
       </Playground>
