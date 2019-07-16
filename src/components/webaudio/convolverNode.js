@@ -6,7 +6,7 @@ export const ConvolverComponent = props => (
     disabled={props.disabled}
     bypassed={props.convolverNode && props.convolverNode.bypass}
     title={"Reverb"}
-    id={"convolverNode"}
+    id={"convolver"}
     setBypass={props.setBypass}
   />
 );

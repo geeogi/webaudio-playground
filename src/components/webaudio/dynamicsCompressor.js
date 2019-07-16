@@ -13,7 +13,7 @@ export const DynamicsCompressorComponent = props => {
         props.dynamicsCompressorNode && props.dynamicsCompressorNode.bypass
       }
       title={"Compressor"}
-      id={"dynamicsCompressorNode"}
+      id={"dynamicsCompressor"}
       setBypass={props.setBypass}
     >
       <label htmlFor="attack">Attack:</label>

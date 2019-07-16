@@ -10,7 +10,7 @@ export const GainComponent = props => {
       disabled={props.disabled}
       bypassed={props.gainNode && props.gainNode.bypass}
       title={"Gain"}
-      id={"gainNode"}
+      id={"gain"}
       setBypass={props.setBypass}
     >
       <label htmlFor="gain">Gain:</label>

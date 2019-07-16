@@ -16,7 +16,7 @@ export const BiquadFilterComponent = props => {
       disabled={props.disabled}
       bypassed={props.biquadFilterNode && props.biquadFilterNode.bypass}
       title={"Filter"}
-      id={"biquadFilterNode"}
+      id={"biquadFilter"}
       setBypass={props.setBypass}
     >
       <label htmlFor="type">Type:</label>

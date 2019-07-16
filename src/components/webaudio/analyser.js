@@ -81,7 +81,7 @@ export const AnalyserComponent = props => {
       disabled={props.disabled}
       bypassed={props.analyserNode && props.analyserNode.bypass}
       title={"Visualiser"}
-      id={"analyserNode"}
+      id={"analyser"}
       setBypass={props.setBypass}
     >
       <label htmlFor="voltage">Voltage:</label>

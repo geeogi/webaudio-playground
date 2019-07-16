@@ -27,7 +27,7 @@ export const PannerComponent = props => {
       disabled={props.disabled}
       bypassed={props.pannerNode && props.pannerNode.bypass}
       title={"Panner"}
-      id={"pannerNode"}
+      id={"panner"}
       setBypass={props.setBypass}
     >
       <label htmlFor="x">x-position:</label>

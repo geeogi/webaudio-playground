@@ -6,7 +6,7 @@ export const WaveShaperComponent = props => (
     disabled={props.disabled}
     bypassed={props.waveShaperNode && props.waveShaperNode.bypass}
     title={"Distortion"}
-    id={"waveShaperNode"}
+    id={"waveShaper"}
     setBypass={props.setBypass}
   />
 );
