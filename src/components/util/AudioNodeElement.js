@@ -9,7 +9,6 @@ import {
 
 const AudioNodeElementContainer = styled.div`
   opacity: ${props => (props.disabled ? 0.3 : 1)};
-  min-width: 180px;
   box-sizing: border-box;
   background-color: ${DARK_COLOR};
   border: solid 4px

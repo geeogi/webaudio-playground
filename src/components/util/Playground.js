@@ -4,11 +4,11 @@ import { CONTRAST_COLOR } from "../../assets/colors";
 const PlaygroundContainer = styled.div`
   color: ${CONTRAST_COLOR};
   box-sizing: border-box;
-  min-height: 100vh;
   display: flex;
   padding: 8px;
+  align-items: flex-start;
   > * {
-    margin: auto 8px;
+    margin: 8px;
   }
 `;
 
