@@ -1,7 +1,7 @@
 import React from "react";
 import { AudioNodeElement } from "../util/AudioNodeElement";
 
-export const GainNodeComponent = props => {
+export const GainComponent = props => {
   const handleGainChange = e => {
     props.gainNode.instance.gain.value = e.target.value;
   };

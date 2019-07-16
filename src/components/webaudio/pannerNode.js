@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { AudioNodeElement } from "../util/AudioNodeElement";
 
-export const PannerNodeComponent = props => {
+export const PannerComponent = props => {
   let [position, setPosition] = useState({ x: 0, y: 0, z: 0 });
   let [orientation, setOrientation] = useState({ x: 0, y: 0, z: 0 });
 

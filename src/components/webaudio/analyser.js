@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { AudioNodeElement } from "../util/AudioNodeElement";
 
-export const AnalyserNodeComponent = props => {
+export const AnalyserComponent = props => {
   const [looping, setLooping] = useState(false);
   const [animationFrameId, setAnimationFrameId] = useState(false);
 
