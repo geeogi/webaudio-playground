@@ -69,7 +69,7 @@ function App() {
     setAudioContext(audioContext);
     setNodes({
       source: { instance: sourceNode, position: 0 },
-      analyser: { instance: analyserNode, position: 1, bypass: false },
+      analyser: { instance: analyserNode, position: 1, bypass: true },
       waveShaper: { instance: waveShaperNode, position: 2, bypass: true },
       dynamicsCompressor: {
         instance: dynamicsCompressorNode,
