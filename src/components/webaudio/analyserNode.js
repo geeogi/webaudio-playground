@@ -3,7 +3,7 @@ import { AudioNodeElement } from "../util/AudioNodeElement";
 
 export const AnalyserComponent = props => {
   // Constants
-  const CANVAS_WIDTH = 150;
+  const CANVAS_WIDTH = 130;
   const CANVAS_HEIGHT = 40;
 
   // State
