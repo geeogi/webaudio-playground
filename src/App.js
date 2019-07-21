@@ -1,24 +1,24 @@
 import React, { useEffect, useState } from "react";
 import { H1 } from "./components/util/H1";
 import { Playground } from "./components/util/Playground";
-import { BiquadFilterComponent } from "./components/webaudio/biquadFilterNode";
-import { ConvolverComponent } from "./components/webaudio/convolverNode";
-import { DynamicsCompressorComponent } from "./components/webaudio/dynamicsCompressorNode";
-import { GainComponent } from "./components/webaudio/gainNode";
-import { PannerComponent } from "./components/webaudio/pannerNode";
-import { WaveShaperComponent } from "./components/webaudio/waveshaperNode";
-import { AnalyserComponent } from "./components/webaudio/analyserNode";
+import { BiquadFilterComponent } from "./components/webaudio/biquadFilterComponent";
+import { ConvolverComponent } from "./components/webaudio/convolverComponent";
+import { DynamicsCompressorComponent } from "./components/webaudio/dynamicsCompressorComponent";
+import { GainComponent } from "./components/webaudio/gainComponent";
+import { PannerComponent } from "./components/webaudio/pannerComponent";
+import { WaveShaperComponent } from "./components/webaudio/waveshaperComponent";
+import { AnalyserComponent } from "./components/webaudio/analyserComponent";
 import { AudioNodeElement } from "./components/util/AudioNodeElement";
 import { setupNodes } from "./core/setupNodes";
 import { connectNodes } from "./core/connectNodes";
 
 function App() {
-  // Meta
+  // State
   let [audioContext, setAudioContext] = useState();
   let [nodes, setNodes] = useState();
   let [isPlaying, setIsPlaying] = useState(false);
 
-  // This method creates the audio context and node graph
+  // This method sets up the audio context and node graph
   const doSetup = async () => {
     const { audioContextInstance, nodeGraph } = await setupNodes();
     setAudioContext(audioContextInstance);

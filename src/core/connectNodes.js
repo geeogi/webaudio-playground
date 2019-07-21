@@ -1,11 +1,12 @@
-export const connectNodes = nodes => {
-  // Map nodes object to an array ordered by node position
-  const nodeArray = Object.values(nodes).sort(
+// Connect all nodes in the node graph, skipping the bypassed nodes
+export const connectNodes = nodeGraph => {
+  // Map node graph object to an array ordered by node position
+  const nodeArray = Object.values(nodeGraph).sort(
     (a, b) => a.position > b.position
   );
-  // Build audio node graph
+  // Connect audio node graph
   nodeArray.forEach((node, index) => {
-    // Remove any existing output connections
+    // Disconnect from any existing outputs
     if (node.instance.numberOfOutputs > 0) {
       node.instance.disconnect();
     }

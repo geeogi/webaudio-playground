@@ -1,3 +1,4 @@
+// Create and configure audio context and nodes
 export const setupNodes = async () => {
   // Initialise AudioContext and audio source
   const AudioContext = window.AudioContext || window.webkitAudioContext;
@@ -39,7 +40,7 @@ export const setupNodes = async () => {
     convolverNode.buffer = decodedData;
   });
 
-  // Return node graph and audio context
+  // Return node graph object and audio context
   return {
     audioContextInstance,
     nodeGraph: {
