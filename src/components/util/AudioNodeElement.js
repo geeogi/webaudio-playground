@@ -29,7 +29,7 @@ const AudioNodeElementContainer = styled.div`
     font-weight: bold;
     font-style: italic;
     color: ${SECONDARY_CONTRAST_COLOR};
-    margin: 16px 0px;
+    margin: 12px 0px;
   }
 `;
 
