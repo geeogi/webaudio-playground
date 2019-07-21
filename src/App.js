@@ -12,83 +12,51 @@ import { AudioNodeElement } from "./components/util/AudioNodeElement";
 
 function App() {
   // Meta
-  const [nodes, setNodes] = useState();
-  const [decodedAudioData, setDecodedAudioData] = useState();
-  const [isPlaying, setIsPlaying] = useState(false);
   const [audioContext, setAudioContext] = useState();
+  const [nodes, setNodes] = useState();
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [decodedSongAudioData, setDecodedSongAudioData] = useState();
+  const [
+    decodedConvolutionAudioData,
+    setDecodedConvolutionAudioData
+  ] = useState();
 
   // This function creates the audio nodes
-  const setup = () => {
-    // Ensure AudioContext doesn't already exist
-    if (audioContext) {
-      alert("AudioContext already exists");
-    }
-
+  const setup = async () => {
     // Initialise AudioContext and audio source
     const AudioContext = window.AudioContext || window.webkitAudioContext;
     const audioContextInstance = new AudioContext();
 
-    // Create bufferSourceNode
+    // Create audio nodes
     const bufferSourceNode = audioContextInstance.createBufferSource();
-
-    // Load buffer
-    const myRequest = new Request("viper.mp3");
-    fetch(myRequest)
-      .then(response => response.arrayBuffer())
-      .then(buffer => {
-        audioContextInstance.decodeAudioData(buffer, decodedData => {
-          setDecodedAudioData(decodedData);
-          bufferSourceNode.buffer = decodedData;
-        });
-      });
-
-    // Create analyserNode
     const analyserNode = audioContextInstance.createAnalyser();
-    analyserNode.fftSize = 256;
-
-    // Create waveShaperNode
     const waveShaperNode = audioContextInstance.createWaveShaper();
-    let curve = new Float32Array(256);
-    curve.forEach((_, i) => {
-      let x = (i * 2) / 256 - 1;
-      curve[i] = ((Math.PI + 15) * x) / (Math.PI + 15 * Math.abs(x));
-    });
-    waveShaperNode.curve = curve;
-    waveShaperNode.oversample = "4x";
-
-    // Create dynamicsCompressorNode
     const dynamicsCompressorNode = audioContextInstance.createDynamicsCompressor();
-
-    // Create gainNode
     const gainNode = audioContextInstance.createGain();
-
-    // Create biquadFilterNode
     const biquadFilterNode = audioContextInstance.createBiquadFilter();
-    biquadFilterNode.type = "lowpass";
-
-    // Create convolverNode
     const convolverNode = audioContextInstance.createConvolver();
-    const impulseResponseRequest = new XMLHttpRequest();
-    impulseResponseRequest.open("GET", "hall.wav", true);
-    impulseResponseRequest.responseType = "arraybuffer";
-    impulseResponseRequest.onload = () => {
-      audioContextInstance.decodeAudioData(
-        impulseResponseRequest.response,
-        buffer => {
-          convolverNode.buffer = buffer;
-        }
-      );
-    };
-    impulseResponseRequest.send();
-
-    // Create pannerNode
     const pannerNode = audioContextInstance.createPanner();
 
-    // Keep nodes, buffer and audio context in state
+    // Load song audio
+    const audioResponse = await fetch(new Request("viper.mp3"));
+    const songAudioBuffer = await audioResponse.arrayBuffer();
+    audioContextInstance.decodeAudioData(songAudioBuffer, decodedData => {
+      setDecodedSongAudioData(decodedData);
+      bufferSourceNode.buffer = decodedData;
+    });
+
+    // Load convolution audio
+    const hallResponse = await fetch(new Request("hall.wav"));
+    const hallAudioBuffer = await hallResponse.arrayBuffer();
+    audioContextInstance.decodeAudioData(hallAudioBuffer, decodedData => {
+      setDecodedConvolutionAudioData(decodedData);
+    });
+
+    // Set nodes, buffer and audio context in state
     setAudioContext(audioContextInstance);
     setNodes({
       bufferSource: { instance: bufferSourceNode, position: 0 },
-      analyser: { instance: analyserNode, position: 1, bypass: true },
+      analyser: { instance: analyserNode, position: 1, bypass: false },
       waveShaper: { instance: waveShaperNode, position: 2, bypass: true },
       dynamicsCompressor: {
         instance: dynamicsCompressorNode,
@@ -131,11 +99,10 @@ function App() {
         if (!node.bypass) {
           // Skip last node
           if (!(index === nodeArray.length - 1)) {
-            // Find the next non-bypassed node
+            // Find the next non-bypassed node and connect this node to it
             const nextNode = nodeArray.find(({ bypass, position }) => {
               return !bypass && position > node.position;
             });
-            // Connect node to the next non-bypassed node
             node.instance.connect(nextNode.instance);
           }
         }
@@ -150,23 +117,30 @@ function App() {
     nodes.bufferSource.instance.start(0);
   };
   const handleStop = () => {
-    setIsPlaying(false);
     nodes.bufferSource.instance.stop(0);
+    // Refresh buffer source node so playing can continue
     const newNodes = { ...nodes };
     newNodes.bufferSource.instance = null;
     newNodes.bufferSource.instance = audioContext.createBufferSource();
-    newNodes.bufferSource.instance.buffer = decodedAudioData;
+    newNodes.bufferSource.instance.buffer = decodedSongAudioData;
     setNodes(newNodes);
+    setIsPlaying(false);
   };
 
   return (
     <main>
       <H1>Webaudio API</H1>
       <Playground>
-        <button onClick={setup}>Setup</button>
         <AudioNodeElement title={"Source"} id={"bufferSource"}>
-          <button onClick={handlePlay}>Play</button>
-          <button onClick={handleStop}>Stop</button>
+          <button onClick={setup} disabled={audioContext}>
+            Setup
+          </button>
+          <button onClick={handlePlay} disabled={!audioContext}>
+            Play
+          </button>
+          <button onClick={handleStop} disabled={!audioContext}>
+            Stop
+          </button>
         </AudioNodeElement>
         <AnalyserComponent
           isActive={
@@ -200,6 +174,7 @@ function App() {
         <ConvolverComponent
           disabled={!audioContext}
           convolverNode={nodes && nodes.convolver}
+          decodedAudioData={decodedConvolutionAudioData}
           setBypass={setBypass}
         />
         <PannerComponent

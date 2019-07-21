@@ -76,6 +76,12 @@ export const AnalyserComponent = props => {
     }
   }, [animationFrameId, props.isActive]);
 
+  useEffect(() => {
+    if (props.analyserNode) {
+      props.analyserNode.instance.fftSize = 256;
+    }
+  }, [props.analyserNode]);
+
   return (
     <AudioNodeElement
       disabled={props.disabled}
