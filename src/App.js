@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { H1 } from "./components/util/H1";
 import { Playground } from "./components/util/Playground";
 import { BiquadFilterComponent } from "./components/webaudio/biquadFilter";
@@ -6,32 +6,48 @@ import { ConvolverComponent } from "./components/webaudio/convolverNode";
 import { DynamicsCompressorComponent } from "./components/webaudio/dynamicsCompressor";
 import { GainComponent } from "./components/webaudio/gainNode";
 import { PannerComponent } from "./components/webaudio/pannerNode";
-import { SourceComponent } from "./components/webaudio/source";
 import { WaveShaperComponent } from "./components/webaudio/waveshaper";
 import { AnalyserComponent } from "./components/webaudio/analyser";
+import { AudioNodeElement } from "./components/util/AudioNodeElement";
 
 function App() {
   // Meta
   const [nodes, setNodes] = useState();
-  const [audioContext, setAudioContext] = useState(null);
+  const [decodedAudioData, setDecodedAudioData] = useState();
   const [isPlaying, setIsPlaying] = useState(false);
-  const audioElementRef = useRef();
+  const [audioContext, setAudioContext] = useState();
 
   // This function creates the audio nodes
   const setup = () => {
-    // Init AudioContext and audio source
+    // Ensure AudioContext doesn't already exist
+    if (audioContext) {
+      alert("AudioContext already exists");
+    }
+
+    // Initialise AudioContext and audio source
     const AudioContext = window.AudioContext || window.webkitAudioContext;
-    const audioContext = new AudioContext();
-    const sourceNode = audioContext.createMediaElementSource(
-      audioElementRef.current
-    );
+    const audioContextInstance = new AudioContext();
+
+    // Create bufferSourceNode
+    const bufferSourceNode = audioContextInstance.createBufferSource();
+
+    // Load buffer
+    const myRequest = new Request("viper.mp3");
+    fetch(myRequest)
+      .then(response => response.arrayBuffer())
+      .then(buffer => {
+        audioContextInstance.decodeAudioData(buffer, decodedData => {
+          setDecodedAudioData(decodedData);
+          bufferSourceNode.buffer = decodedData;
+        });
+      });
 
     // Create analyserNode
-    const analyserNode = audioContext.createAnalyser();
+    const analyserNode = audioContextInstance.createAnalyser();
     analyserNode.fftSize = 256;
 
     // Create waveShaperNode
-    const waveShaperNode = audioContext.createWaveShaper();
+    const waveShaperNode = audioContextInstance.createWaveShaper();
     let curve = new Float32Array(256);
     curve.forEach((_, i) => {
       let x = (i * 2) / 256 - 1;
@@ -41,34 +57,37 @@ function App() {
     waveShaperNode.oversample = "4x";
 
     // Create dynamicsCompressorNode
-    const dynamicsCompressorNode = audioContext.createDynamicsCompressor();
+    const dynamicsCompressorNode = audioContextInstance.createDynamicsCompressor();
 
     // Create gainNode
-    const gainNode = audioContext.createGain();
+    const gainNode = audioContextInstance.createGain();
 
     // Create biquadFilterNode
-    const biquadFilterNode = audioContext.createBiquadFilter();
+    const biquadFilterNode = audioContextInstance.createBiquadFilter();
     biquadFilterNode.type = "lowpass";
 
     // Create convolverNode
-    const convolverNode = audioContext.createConvolver();
+    const convolverNode = audioContextInstance.createConvolver();
     const impulseResponseRequest = new XMLHttpRequest();
     impulseResponseRequest.open("GET", "hall.wav", true);
     impulseResponseRequest.responseType = "arraybuffer";
     impulseResponseRequest.onload = () => {
-      audioContext.decodeAudioData(impulseResponseRequest.response, buffer => {
-        convolverNode.buffer = buffer;
-      });
+      audioContextInstance.decodeAudioData(
+        impulseResponseRequest.response,
+        buffer => {
+          convolverNode.buffer = buffer;
+        }
+      );
     };
     impulseResponseRequest.send();
 
     // Create pannerNode
-    const pannerNode = audioContext.createPanner();
+    const pannerNode = audioContextInstance.createPanner();
 
-    // Keep nodes and audio context in state
-    setAudioContext(audioContext);
+    // Keep nodes, buffer and audio context in state
+    setAudioContext(audioContextInstance);
     setNodes({
-      source: { instance: sourceNode, position: 0 },
+      bufferSource: { instance: bufferSourceNode, position: 0 },
       analyser: { instance: analyserNode, position: 1, bypass: true },
       waveShaper: { instance: waveShaperNode, position: 2, bypass: true },
       dynamicsCompressor: {
@@ -84,7 +103,7 @@ function App() {
       },
       convolver: { instance: convolverNode, position: 6, bypass: true },
       panner: { instance: pannerNode, position: 7, bypass: true },
-      destination: { instance: audioContext.destination, position: 8 }
+      destination: { instance: audioContextInstance.destination, position: 8 }
     });
   };
 
@@ -118,41 +137,37 @@ function App() {
             });
             // Connect node to the next non-bypassed node
             node.instance.connect(nextNode.instance);
-            console.log(node.instance);
           }
         }
       });
     }
   }, [nodes]);
 
-  // Handle play and pause
+  // Handle play and stop
   const handlePlay = () => {
-    if (audioContext && audioContext.state === "suspended") {
-      audioContext.resume();
-    }
-    if (nodes && nodes.source) {
-      nodes.source.instance.mediaElement.play();
-    }
     setIsPlaying(true);
+    audioContext.resume();
+    nodes.bufferSource.instance.start(0);
   };
-
-  const handlePause = () => {
-    nodes.source.instance.mediaElement.pause();
+  const handleStop = () => {
     setIsPlaying(false);
+    nodes.bufferSource.instance.stop(0);
+    const newNodes = { ...nodes };
+    newNodes.bufferSource.instance = null;
+    newNodes.bufferSource.instance = audioContext.createBufferSource();
+    newNodes.bufferSource.instance.buffer = decodedAudioData;
+    setNodes(newNodes);
   };
 
   return (
     <main>
       <H1>Webaudio API</H1>
       <Playground>
-        <SourceComponent
-          isPlaying={isPlaying}
-          handlePlay={handlePlay}
-          handlePause={handlePause}
-          reactRef={audioElementRef}
-          ready={Boolean(nodes)}
-          setup={setup}
-        />
+        <button onClick={setup}>Setup</button>
+        <AudioNodeElement title={"Source"} id={"bufferSource"}>
+          <button onClick={handlePlay}>Play</button>
+          <button onClick={handleStop}>Stop</button>
+        </AudioNodeElement>
         <AnalyserComponent
           isActive={
             isPlaying && nodes && nodes.analyser && !nodes.analyser.bypass
