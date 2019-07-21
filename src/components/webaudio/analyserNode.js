@@ -2,15 +2,19 @@ import React, { useEffect, useRef, useState } from "react";
 import { AudioNodeElement } from "../util/AudioNodeElement";
 
 export const AnalyserComponent = props => {
-  const [looping, setLooping] = useState(false);
-  const [animationFrameId, setAnimationFrameId] = useState(false);
-
-  const [currentMaxVoltage, setCurrentMaxVoltage] = useState(0);
-
-  const frequencyCanvas = useRef();
+  // Constants
   const CANVAS_WIDTH = 150;
   const CANVAS_HEIGHT = 40;
 
+  // State
+  const [looping, setLooping] = useState(false);
+  const [animationFrameId, setAnimationFrameId] = useState(false);
+  const [currentMaxVoltage, setCurrentMaxVoltage] = useState(0);
+
+  // Elements
+  const frequencyCanvas = useRef();
+
+  // This method calculates and sets the current voltage level
   const updateLevelMeter = timeDomainDataArray => {
     // Find max sample
     const max = Math.max(...timeDomainDataArray);
@@ -20,10 +24,7 @@ export const AnalyserComponent = props => {
     setCurrentMaxVoltage(maxVoltage);
   };
 
-  const clearLevelMeter = () => {
-    setCurrentMaxVoltage(0);
-  };
-
+  // This method draws the frequency canvas
   const updateFrequencyCanvas = frequencyDataArray => {
     if (frequencyCanvas) {
       const context = frequencyCanvas.current.getContext("2d");
@@ -41,11 +42,16 @@ export const AnalyserComponent = props => {
     }
   };
 
+  // These methods reset the visuals
+  const clearLevelMeter = () => {
+    setCurrentMaxVoltage(0);
+  };
   const clearFrequencyCanvas = () => {
     const context = frequencyCanvas.current.getContext("2d");
     context.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
   };
 
+  // This loop retrieves the analysis and triggers the update methods
   const loop = () => {
     const bufferLength = props.analyserNode.instance.frequencyBinCount;
     const timeDomainDataArray = new Uint8Array(bufferLength);
@@ -61,26 +67,22 @@ export const AnalyserComponent = props => {
     setAnimationFrameId(nextAnimationFrameId);
   };
 
+  // This effect triggers the loop if the analyser isn't "halted"
   useEffect(() => {
-    if (!looping && props.isActive) {
+    if (!looping && !props.isHalted) {
       loop();
     }
   });
 
+  // This effect cancels the loop if the analyser is "halted"
   useEffect(() => {
-    if (!props.isActive) {
+    if (props.isHalted) {
       cancelAnimationFrame(animationFrameId);
       clearLevelMeter();
       clearFrequencyCanvas();
       setLooping(false);
     }
-  }, [animationFrameId, props.isActive]);
-
-  useEffect(() => {
-    if (props.analyserNode) {
-      props.analyserNode.instance.fftSize = 256;
-    }
-  }, [props.analyserNode]);
+  }, [animationFrameId, props.isHalted]);
 
   return (
     <AudioNodeElement
