@@ -1,9 +1,10 @@
 import React, { useEffect, useRef, useState } from "react";
 import { AudioNodeElement } from "../util/AudioNodeElement";
+import { Canvas } from "../util/Canvas";
 
 export const AnalyserComponent = props => {
   // Constants
-  const CANVAS_WIDTH = 130;
+  const CANVAS_WIDTH = 100;
   const CANVAS_HEIGHT = 40;
 
   // State
@@ -33,7 +34,7 @@ export const AnalyserComponent = props => {
       frequencyDataArray.forEach((value, index) => {
         // Plot every 2nd bar
         if (index % 2 === 0) {
-          const y = (value / 255) * CANVAS_HEIGHT;
+          const y = (value / 255) * CANVAS_HEIGHT * 0.9;
           const x = index;
           context.fillRect(x, CANVAS_HEIGHT - y, 1, CANVAS_HEIGHT);
         }
@@ -102,7 +103,7 @@ export const AnalyserComponent = props => {
         value={currentMaxVoltage}
       />
       <label htmlFor="frequency">Frequency:</label>
-      <canvas
+      <Canvas
         name="frequency"
         ref={frequencyCanvas}
         width={CANVAS_WIDTH + "px"}

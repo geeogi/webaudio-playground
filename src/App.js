@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from "react";
+import { AudioNodeElement } from "./components/util/AudioNodeElement";
 import { H1 } from "./components/util/H1";
 import { Playground } from "./components/util/Playground";
+import { AnalyserComponent } from "./components/webaudio/analyserComponent";
 import { BiquadFilterComponent } from "./components/webaudio/biquadFilterComponent";
 import { ConvolverComponent } from "./components/webaudio/convolverComponent";
 import { DynamicsCompressorComponent } from "./components/webaudio/dynamicsCompressorComponent";
 import { GainComponent } from "./components/webaudio/gainComponent";
 import { PannerComponent } from "./components/webaudio/pannerComponent";
 import { WaveShaperComponent } from "./components/webaudio/waveshaperComponent";
-import { AnalyserComponent } from "./components/webaudio/analyserComponent";
-import { AudioNodeElement } from "./components/util/AudioNodeElement";
-import { setupNodes } from "./core/setupNodes";
 import { connectNodes } from "./core/connectNodes";
+import { setupNodes } from "./core/setupNodes";
 
 function App() {
   // State
@@ -57,10 +57,10 @@ function App() {
       <Playground>
         <AudioNodeElement title={"Source"} id={"bufferSource"}>
           <button onClick={doSetup} disabled={audioContext}>
-            Initalise
+            Click to create audioContext
           </button>
           <button onClick={handlePlay} disabled={!audioContext || isPlaying}>
-            Play
+            Click to play the buffer
           </button>
           <button onClick={handleStop} disabled={!audioContext || !isPlaying}>
             Stop
