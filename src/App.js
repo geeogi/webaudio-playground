@@ -71,38 +71,38 @@ function App() {
           isHalted={
             !isPlaying || !nodes || !nodes.analyser || nodes.analyser.bypass
           }
-          disabled={!audioContext}
+          disabled={!isPlaying}
           analyserNode={nodes && nodes.analyser}
           setBypass={setBypass}
         />
         <WaveShaperComponent
-          disabled={!audioContext}
+          disabled={!isPlaying}
           waveShaperNode={nodes && nodes.waveShaper}
           setBypass={setBypass}
         />
         <DynamicsCompressorComponent
-          disabled={!audioContext}
+          disabled={!isPlaying}
           dynamicsCompressorNode={nodes && nodes.dynamicsCompressor}
           setBypass={setBypass}
         />
         <GainComponent
-          disabled={!audioContext}
+          disabled={!isPlaying}
           gainNode={nodes && nodes.gain}
           setBypass={setBypass}
         />
 
         <BiquadFilterComponent
-          disabled={!audioContext}
+          disabled={!isPlaying}
           biquadFilterNode={nodes && nodes.biquadFilter}
           setBypass={setBypass}
         />
         <ConvolverComponent
-          disabled={!audioContext}
+          disabled={!isPlaying}
           convolverNode={nodes && nodes.convolver}
           setBypass={setBypass}
         />
         <PannerComponent
-          disabled={!audioContext}
+          disabled={!isPlaying}
           pannerNode={nodes && nodes.panner}
           setBypass={setBypass}
         />
