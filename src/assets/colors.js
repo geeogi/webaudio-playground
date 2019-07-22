@@ -5,4 +5,4 @@ export const LIGHT_COLOR = "#714E9C";
 export const LIGHTER_COLOR = "#F487F2";
 export const SECONDARY_CONTRAST_COLOR = "#FACCF4";
 export const CONTRAST_COLOR = "#FFF2FC";
-export const ACTIVE_COLOR = "lightgreen";
+export const ACTIVE_COLOR = "#00B67D";

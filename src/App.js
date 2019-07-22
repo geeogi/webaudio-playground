@@ -11,6 +11,7 @@ import { PannerComponent } from "./components/webaudio/pannerComponent";
 import { WaveShaperComponent } from "./components/webaudio/waveshaperComponent";
 import { connectNodes } from "./core/connectNodes";
 import { setupNodes } from "./core/setupNodes";
+import { Button } from "./components/util/Button";
 
 function App() {
   // State
@@ -56,15 +57,15 @@ function App() {
       <H1>Webaudio API</H1>
       <Playground>
         <AudioNodeElement title={"Source"} id={"bufferSource"}>
-          <button onClick={doSetup} disabled={audioContext}>
-            Click to create audioContext
-          </button>
-          <button onClick={handlePlay} disabled={!audioContext || isPlaying}>
-            Click to play the buffer
-          </button>
-          <button onClick={handleStop} disabled={!audioContext || !isPlaying}>
+          <Button onClick={doSetup} disabled={audioContext}>
+            Setup
+          </Button>
+          <Button onClick={handlePlay} disabled={!audioContext || isPlaying}>
+            Play
+          </Button>
+          <Button onClick={handleStop} disabled={!audioContext || !isPlaying}>
             Stop
-          </button>
+          </Button>
         </AudioNodeElement>
         <AnalyserComponent
           isHalted={

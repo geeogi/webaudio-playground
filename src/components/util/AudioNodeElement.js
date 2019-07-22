@@ -6,16 +6,16 @@ import {
   LIGHT_COLOR,
   SECONDARY_CONTRAST_COLOR
 } from "../../assets/colors";
+import { Switch } from "./Switch";
 
 const AudioNodeElementContainer = styled.div`
-  opacity: ${props => (props.disabled ? 0.3 : 1)};
-  box-sizing: border-box;
   background-color: ${DARK_COLOR};
-  border: solid 4px
-    ${props => (props.bypassed || props.disabled ? LIGHT_COLOR : ACTIVE_COLOR)};
   border-radius: 4px;
   font-size: 14px;
   padding: 8px;
+  opacity: ${props => (props.disabled ? 0.3 : 1)};
+  border: solid 4px
+    ${props => (props.bypassed || props.disabled ? LIGHT_COLOR : ACTIVE_COLOR)};
   > * {
     display: block;
   }
@@ -34,6 +34,8 @@ const AudioNodeElementContainer = styled.div`
 `;
 
 export const AudioNodeElement = props => {
+  const isEnabled = !props.disabled && !props.bypassed;
+  const toggleBypassed = () => props.setBypass(props.id, !props.bypassed);
   return (
     <AudioNodeElementContainer
       disabled={props.disabled}
@@ -43,13 +45,10 @@ export const AudioNodeElement = props => {
       <h6>{props.id}</h6>
       {props.setBypass && (
         <>
-          <label htmlFor="enabled">Enabled:</label>
-          <input
+          <Switch
             disabled={props.disabled}
-            name="enabled"
-            type="checkbox"
-            checked={!props.disabled && !props.bypassed}
-            onChange={e => props.setBypass(props.id, !e.target.checked)}
+            enabled={isEnabled}
+            onSwitch={toggleBypassed}
           />
         </>
       )}
