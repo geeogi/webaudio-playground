@@ -1,5 +1,5 @@
 import React from "react";
-import { AudioNodeElement } from "../util/AudioNodeElement";
+import { AudioNodeElement } from "../base/AudioNodeElement";
 
 export const BiquadFilterComponent = props => {
   const handleFilterFrequencyChange = e => {

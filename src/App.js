@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { AudioNodeElement } from "./components/util/AudioNodeElement";
-import { H1 } from "./components/util/H1";
-import { Playground } from "./components/util/Playground";
+import { AudioNodeElement } from "./components/base/AudioNodeElement";
+import { H1 } from "./components/base/H1";
+import { Playground } from "./components/base/Playground";
 import { AnalyserComponent } from "./components/webaudio/analyserComponent";
 import { BiquadFilterComponent } from "./components/webaudio/biquadFilterComponent";
 import { ConvolverComponent } from "./components/webaudio/convolverComponent";
@@ -11,7 +11,9 @@ import { PannerComponent } from "./components/webaudio/pannerComponent";
 import { WaveShaperComponent } from "./components/webaudio/waveshaperComponent";
 import { connectNodes } from "./core/connectNodes";
 import { setupNodes } from "./core/setupNodes";
-import { Button } from "./components/util/Button";
+import { Button } from "./components/base/Button";
+import { P } from "./components/base/P";
+import { Box } from "./components/base/Box";
 
 function App() {
   // State
@@ -54,7 +56,15 @@ function App() {
 
   return (
     <main>
-      <H1>Webaudio API</H1>
+      <Box>
+        <H1>Webaudio API</H1>
+        <P>
+          <span>Sound on </span>
+          <span role="img" aria-label="speaker">
+            🔊
+          </span>
+        </P>
+      </Box>
       <Playground>
         <AudioNodeElement title={"Source"} id={"bufferSource"}>
           <Button onClick={doSetup} disabled={audioContext}>

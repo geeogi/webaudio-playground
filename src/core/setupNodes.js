@@ -31,6 +31,7 @@ export const setupNodes = async () => {
   const songAudioBuffer = await audioResponse.arrayBuffer();
   audioContextInstance.decodeAudioData(songAudioBuffer, decodedData => {
     bufferSourceNode.buffer = decodedData;
+    bufferSourceNode.loop = true;
   });
 
   // Configure convolverNode

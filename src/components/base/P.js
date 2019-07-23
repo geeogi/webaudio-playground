@@ -1,8 +1,8 @@
 import styled from "styled-components";
 import { CONTRAST_COLOR } from "../../assets/colors";
 
-export const H1 = styled.h1`
+export const P = styled.p`
   color: ${CONTRAST_COLOR};
-  padding: 16px;
+  padding: 0;
   margin: 0;
 `;

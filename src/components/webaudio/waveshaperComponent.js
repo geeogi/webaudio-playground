@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { AudioNodeElement } from "../util/AudioNodeElement";
+import { AudioNodeElement } from "../base/AudioNodeElement";
 
 export const WaveShaperComponent = props => {
   // Set curve

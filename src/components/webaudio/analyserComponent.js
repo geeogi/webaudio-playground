@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
-import { AudioNodeElement } from "../util/AudioNodeElement";
-import { Canvas } from "../util/Canvas";
+import { AudioNodeElement } from "../base/AudioNodeElement";
+import { Canvas } from "../base/Canvas";
 
 export const AnalyserComponent = props => {
   // Constants

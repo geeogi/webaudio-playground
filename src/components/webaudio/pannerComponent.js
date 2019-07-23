@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { AudioNodeElement } from "../util/AudioNodeElement";
+import { AudioNodeElement } from "../base/AudioNodeElement";
 
 export const PannerComponent = props => {
   let [position, setPosition] = useState({ x: 0, y: 0, z: 0 });
