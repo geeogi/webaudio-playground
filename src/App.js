@@ -23,9 +23,11 @@ function App() {
 
   // This method sets up the audio context and node graph
   const doSetup = async () => {
-    const { audioContextInstance, nodeGraph } = await setupNodes();
-    setAudioContext(audioContextInstance);
-    setNodes(nodeGraph);
+    if (!audioContext) {
+      const { audioContextInstance, nodeGraph } = await setupNodes();
+      setAudioContext(audioContextInstance);
+      setNodes(nodeGraph);
+    }
   };
 
   // This method connects the audio node graph each time "nodes" is set
