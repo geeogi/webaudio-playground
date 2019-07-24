@@ -90,17 +90,6 @@ function App() {
           waveShaperNode={nodes && nodes.waveShaper}
           setBypass={setBypass}
         />
-        <DynamicsCompressorComponent
-          disabled={!isPlaying}
-          dynamicsCompressorNode={nodes && nodes.dynamicsCompressor}
-          setBypass={setBypass}
-        />
-        <GainComponent
-          disabled={!isPlaying}
-          gainNode={nodes && nodes.gain}
-          setBypass={setBypass}
-        />
-
         <BiquadFilterComponent
           disabled={!isPlaying}
           biquadFilterNode={nodes && nodes.biquadFilter}
@@ -109,6 +98,16 @@ function App() {
         <ConvolverComponent
           disabled={!isPlaying}
           convolverNode={nodes && nodes.convolver}
+          setBypass={setBypass}
+        />
+        <DynamicsCompressorComponent
+          disabled={!isPlaying}
+          dynamicsCompressorNode={nodes && nodes.dynamicsCompressor}
+          setBypass={setBypass}
+        />
+        <GainComponent
+          disabled={!isPlaying}
+          gainNode={nodes && nodes.gain}
           setBypass={setBypass}
         />
         <PannerComponent

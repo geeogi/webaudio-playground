@@ -27,7 +27,7 @@ export const setupNodes = async () => {
   waveShaperNode.oversample = "4x";
 
   // Configure bufferSourceNode
-  const audioResponse = await fetch(new Request("viper.mp3"));
+  const audioResponse = await fetch(new Request("konkreet.mp3"));
   const songAudioBuffer = await audioResponse.arrayBuffer();
   audioContextInstance.decodeAudioData(songAudioBuffer, decodedData => {
     bufferSourceNode.buffer = decodedData;
@@ -48,18 +48,18 @@ export const setupNodes = async () => {
       bufferSource: { instance: bufferSourceNode, position: 0 },
       analyser: { instance: analyserNode, position: 1, bypass: false },
       waveShaper: { instance: waveShaperNode, position: 2, bypass: true },
-      dynamicsCompressor: {
-        instance: dynamicsCompressorNode,
+      biquadFilter: {
+        instance: biquadFilterNode,
         position: 3,
         bypass: true
       },
-      gain: { instance: gainNode, position: 4, bypass: true },
-      biquadFilter: {
-        instance: biquadFilterNode,
+      convolver: { instance: convolverNode, position: 4, bypass: true },
+      dynamicsCompressor: {
+        instance: dynamicsCompressorNode,
         position: 5,
         bypass: true
       },
-      convolver: { instance: convolverNode, position: 6, bypass: true },
+      gain: { instance: gainNode, position: 6, bypass: true },
       panner: { instance: pannerNode, position: 7, bypass: true },
       destination: { instance: audioContextInstance.destination, position: 8 }
     }
