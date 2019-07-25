@@ -27,7 +27,7 @@ export const setupNodes = async () => {
   waveShaperNode.oversample = "4x";
 
   // Configure bufferSourceNode
-  const audioResponse = await fetch(new Request("konkreet.mp3"));
+  const audioResponse = await fetch(new Request("konkreet-short.mp3"));
   const songAudioBuffer = await audioResponse.arrayBuffer();
   audioContextInstance.decodeAudioData(songAudioBuffer, decodedData => {
     bufferSourceNode.buffer = decodedData;
