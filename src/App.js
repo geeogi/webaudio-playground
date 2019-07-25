@@ -20,10 +20,12 @@ function App() {
   let [audioContext, setAudioContext] = useState();
   let [nodes, setNodes] = useState();
   let [isPlaying, setIsPlaying] = useState(false);
+  let [isLoading, setIsLoading] = useState(false);
 
   // This method sets up the audio context and node graph
   const doSetup = async () => {
     if (!audioContext) {
+      setIsLoading(true);
       const { audioContextInstance, nodeGraph } = await setupNodes();
       setAudioContext(audioContextInstance);
       setNodes(nodeGraph);
@@ -33,6 +35,7 @@ function App() {
   // This method connects the audio node graph each time "nodes" is set
   useEffect(() => {
     if (nodes) {
+      setIsLoading(false);
       connectNodes(nodes);
     }
   }, [nodes]);
@@ -70,7 +73,7 @@ function App() {
       <Playground>
         <AudioNodeElement title={"Source"} id={"bufferSource"}>
           <Button onClick={doSetup} disabled={audioContext}>
-            Setup
+            {isLoading ? "Loading" : "Setup"}
           </Button>
           <Button onClick={handlePlay} disabled={!audioContext || isPlaying}>
             Play
