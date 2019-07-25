@@ -50,7 +50,7 @@ export const BiquadFilterComponent = props => {
         type="range"
         min="0"
         max="20"
-        defaultValue="1"
+        defaultValue="4"
         step="0.01"
         onChange={handleFilterQChange}
       />

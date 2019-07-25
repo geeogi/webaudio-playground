@@ -26,6 +26,9 @@ export const setupNodes = async () => {
   waveShaperNode.curve = curve;
   waveShaperNode.oversample = "4x";
 
+  // Configue biquadFilterNode
+  biquadFilterNode.Q.value = 4;
+
   // Configure bufferSourceNode
   const audioResponse = await fetch(new Request("konkreet-short.mp3"));
   const songAudioBuffer = await audioResponse.arrayBuffer();
