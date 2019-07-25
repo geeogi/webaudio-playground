@@ -38,7 +38,7 @@ export const BiquadFilterComponent = props => {
         name="frequency"
         type="range"
         min="0"
-        max="40000"
+        max="15000"
         defaultValue="350"
         step="0.01"
         onChange={handleFilterFrequencyChange}
