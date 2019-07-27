@@ -6,7 +6,9 @@ import { Base } from "xrc";
 
 const rootElement = document.getElementById("root");
 
-ReactDOM.hydrate(
+const renderMethod = !!module.hot ? ReactDOM.render : ReactDOM.hydrate;
+
+renderMethod(
   <Base>
     <App />
   </Base>,
