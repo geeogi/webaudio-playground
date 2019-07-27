@@ -21,8 +21,10 @@ export const AnalyserComponent = props => {
     const max = Math.max(...timeDomainDataArray);
     // Convert 8bit waveform data [0, 255] to voltage [-1,1]
     const maxVoltage = (max - 128) / 128;
+    // Scale to [0,1]
+    const displayVoltage = (maxVoltage + 1) / 2;
     // Set state to trigger re-render
-    setCurrentMaxVoltage(maxVoltage);
+    setCurrentMaxVoltage(displayVoltage);
   };
 
   // This method draws the frequency canvas
@@ -98,7 +100,7 @@ export const AnalyserComponent = props => {
         name="voltage"
         min="0"
         optimum="0.6"
-        high="0.95"
+        high="0.99"
         max="1"
         value={currentMaxVoltage}
       />
