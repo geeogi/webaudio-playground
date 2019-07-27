@@ -42,7 +42,7 @@ export const AudioNodeElement = props => {
       bypassed={props.bypassed}
     >
       <h3>{props.title}</h3>
-      <h6>{props.id}</h6>
+      <h6>{props.id}Node</h6>
       {props.setBypass && (
         <>
           <Switch
