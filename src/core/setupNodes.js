@@ -1,5 +1,5 @@
 // Create and configure audio context and nodes
-export const setupNodes = async () => {
+export const setupNodes = async (songAudioBuffer, impulseAudioBuffer) => {
   // Initialise AudioContext and audio source
   const AudioContext = window.AudioContext || window.webkitAudioContext;
   const audioContextInstance = new AudioContext();
@@ -30,17 +30,16 @@ export const setupNodes = async () => {
   biquadFilterNode.Q.value = 4;
 
   // Configure bufferSourceNode
-  const audioResponse = await fetch(new Request("konkreet.mp3"));
-  const songAudioBuffer = await audioResponse.arrayBuffer();
-  audioContextInstance.decodeAudioData(songAudioBuffer, decodedData => {
-    bufferSourceNode.buffer = decodedData;
-    bufferSourceNode.loop = true;
-  });
+  audioContextInstance.decodeAudioData(
+    songAudioBuffer,
+    decodedData => {
+      bufferSourceNode.buffer = decodedData;
+      bufferSourceNode.loop = true;
+    }
+  );
 
   // Configure convolverNode
-  const hallResponse = await fetch(new Request("hall.wav"));
-  const hallAudioBuffer = await hallResponse.arrayBuffer();
-  audioContextInstance.decodeAudioData(hallAudioBuffer, decodedData => {
+  audioContextInstance.decodeAudioData(impulseAudioBuffer, decodedData => {
     convolverNode.buffer = decodedData;
   });
 

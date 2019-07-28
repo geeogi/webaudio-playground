@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { AudioNodeElement } from "./components/base/AudioNodeElement";
+import { Box } from "./components/base/Box";
+import { Button } from "./components/base/Button";
 import { H1 } from "./components/base/H1";
+import { P } from "./components/base/P";
 import { Playground } from "./components/base/Playground";
 import { AnalyserComponent } from "./components/webaudio/analyserComponent";
 import { BiquadFilterComponent } from "./components/webaudio/biquadFilterComponent";
@@ -11,22 +14,46 @@ import { PannerComponent } from "./components/webaudio/pannerComponent";
 import { WaveShaperComponent } from "./components/webaudio/waveshaperComponent";
 import { connectNodes } from "./core/connectNodes";
 import { setupNodes } from "./core/setupNodes";
-import { Button } from "./components/base/Button";
-import { P } from "./components/base/P";
-import { Box } from "./components/base/Box";
 
 function App() {
   // State
+  let [songAudioBuffer, setSongAudioBuffer] = useState();
+  let [impulseAudioBuffer, setImpulseAudioBuffer] = useState();
   let [audioContext, setAudioContext] = useState();
   let [nodes, setNodes] = useState();
   let [isPlaying, setIsPlaying] = useState(false);
-  let [isLoading, setIsLoading] = useState(false);
+
+  // Here we load the audio files as ArrayBuffers
+  // Note: using buffers for long audio files is CPU and memory intensive.
+  // The <audio> element is  better suited for this purpose.
+  // Currently there's a bug on IOS so we're not using it: https://bugs.webkit.org/show_bug.cgi?id=196293
+  useEffect(() => {
+    if (!songAudioBuffer) {
+      fetch(new Request("konkreet-clip.mp3")).then(songAudio => {
+        songAudio.arrayBuffer().then(songBuffer => {
+          setSongAudioBuffer(songBuffer);
+        });
+      });
+    }
+    if (!impulseAudioBuffer) {
+      fetch(new Request("hall.mp3")).then(impulseAudio => {
+        impulseAudio.arrayBuffer().then(impulseBuffer => {
+          setImpulseAudioBuffer(impulseBuffer);
+        });
+      });
+    }
+  });
 
   // This method sets up the audio context and node graph
   const doSetup = async () => {
-    if (!audioContext) {
-      setIsLoading(true);
-      const { audioContextInstance, nodeGraph } = await setupNodes();
+    if (songAudioBuffer && impulseAudioBuffer && !audioContext) {
+      // Create a copy of the buffers so they can be used again
+      const songAudioBufferCopy = songAudioBuffer.slice(0);
+      const impulseAudioBufferCopy = impulseAudioBuffer.slice(0);
+      const { audioContextInstance, nodeGraph } = await setupNodes(
+        songAudioBufferCopy,
+        impulseAudioBufferCopy
+      );
       setAudioContext(audioContextInstance);
       setNodes(nodeGraph);
     }
@@ -35,7 +62,6 @@ function App() {
   // This method connects the audio node graph each time "nodes" is set
   useEffect(() => {
     if (nodes) {
-      setIsLoading(false);
       connectNodes(nodes);
     }
   }, [nodes]);
@@ -59,6 +85,8 @@ function App() {
     setIsPlaying(false);
   };
 
+  const isLoading = Boolean(!songAudioBuffer || !impulseAudioBuffer);
+
   return (
     <main>
       <Box>
@@ -72,15 +100,34 @@ function App() {
       </Box>
       <Playground>
         <AudioNodeElement title={"Source"} id={"bufferSource"}>
-          <Button onClick={doSetup} disabled={audioContext}>
-            {isLoading ? "Loading" : "Setup"}
-          </Button>
-          <Button onClick={handlePlay} disabled={!audioContext || isPlaying}>
-            Play
-          </Button>
-          <Button onClick={handleStop} disabled={!audioContext || !isPlaying}>
-            Stop
-          </Button>
+          {isLoading ? (
+            <P>
+              <strong>Loading...</strong>
+            </P>
+          ) : (
+            <>
+              <Button
+                onClick={doSetup}
+                disabled={
+                  audioContext || !songAudioBuffer || !impulseAudioBuffer
+                }
+              >
+                Setup
+              </Button>
+              <Button
+                onClick={handlePlay}
+                disabled={!audioContext || isPlaying}
+              >
+                Play
+              </Button>
+              <Button
+                onClick={handleStop}
+                disabled={!audioContext || !isPlaying}
+              >
+                Stop
+              </Button>
+            </>
+          )}
         </AudioNodeElement>
         <AnalyserComponent
           isHalted={
