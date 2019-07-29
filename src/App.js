@@ -133,12 +133,8 @@ function App() {
           </Button>
         </AudioNodeElement>
         <AnalyserComponent
-          isHalted={
-            !isPlaying || !nodes || !nodes.analyser || nodes.analyser.bypass
-          }
           disabled={!isPlaying}
           analyserNode={nodes && nodes.analyser}
-          setBypass={setBypass}
         />
         <WaveShaperComponent
           disabled={!isPlaying}

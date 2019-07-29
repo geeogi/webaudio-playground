@@ -70,30 +70,28 @@ export const AnalyserComponent = props => {
     setAnimationFrameId(nextAnimationFrameId);
   };
 
-  // This effect triggers the loop if the analyser isn't "halted"
+  // This effect triggers the loop if the analyser isn't disabled
   useEffect(() => {
-    if (!looping && !props.isHalted) {
+    if (!looping && !props.disabled) {
       loop();
     }
   });
 
-  // This effect cancels the loop if the analyser is "halted"
+  // This effect cancels the loop if the analyser is disabled
   useEffect(() => {
-    if (props.isHalted) {
+    if (props.disabled) {
       cancelAnimationFrame(animationFrameId);
       clearLevelMeter();
       clearFrequencyCanvas();
       setLooping(false);
     }
-  }, [animationFrameId, props.isHalted]);
+  }, [animationFrameId, props.disabled]);
 
   return (
     <AudioNodeElement
       disabled={props.disabled}
-      bypassed={props.analyserNode && props.analyserNode.bypass}
       title={"Visualiser"}
       id={"analyser"}
-      setBypass={props.setBypass}
     >
       <label htmlFor="voltage">Voltage:</label>
       <meter
