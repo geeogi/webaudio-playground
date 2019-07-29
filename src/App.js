@@ -13,7 +13,7 @@ import { GainComponent } from "./components/webaudio/gainComponent";
 import { PannerComponent } from "./components/webaudio/pannerComponent";
 import { WaveShaperComponent } from "./components/webaudio/waveshaperComponent";
 import { connectNodes } from "./core/connectNodes";
-import { setupNodes } from "./core/setupNodes";
+import { setupAudioContextAndAudioNodeGraph } from "./core/setupNodes";
 
 function App() {
   // State
@@ -23,10 +23,13 @@ function App() {
   let [nodes, setNodes] = useState();
   let [isPlaying, setIsPlaying] = useState(false);
 
-  // Here we load the audio files as ArrayBuffers
-  // Note: using buffers for long audio files is CPU and memory intensive.
-  // The <audio> element is  better suited for this purpose.
-  // Currently there's a bug on IOS so we're not using it: https://bugs.webkit.org/show_bug.cgi?id=196293
+  /*
+   ** Note: storing and decoding large audio buffers is CPU and memory intensive.
+   ** The <audio> element is best suited for large audio files: https://developer.mozilla.org/en-US/docs/Web/API/AudioContext/createMediaElementSource
+   ** However, we're using ArrayBuffers in order to avoid this IOS bug: https://bugs.webkit.org/show_bug.cgi?id=196293
+   */
+
+  // Load the audio files as ArrayBuffers on app start
   useEffect(() => {
     if (!songAudioBuffer) {
       fetch(new Request("konkreet-clip.mp3")).then(songAudio => {
@@ -44,13 +47,20 @@ function App() {
     }
   });
 
-  // This method sets up the audio context and node graph
-  const doSetup = async () => {
+  /*
+   ** Note: User gesture is required to initiate AudioContext: https://developers.google.com/web/updates/2017/09/autoplay-policy-changes
+   */
+
+  // This method sets up the audio context and audio node graph
+  const onSetup = async () => {
     if (songAudioBuffer && impulseAudioBuffer && !audioContext) {
-      // Create a copy of the buffers so they can be used again
+      // Use a copy of the buffers so the originals can be used again
       const songAudioBufferCopy = songAudioBuffer.slice(0);
       const impulseAudioBufferCopy = impulseAudioBuffer.slice(0);
-      const { audioContextInstance, nodeGraph } = await setupNodes(
+      const {
+        audioContextInstance,
+        nodeGraph
+      } = await setupAudioContextAndAudioNodeGraph(
         songAudioBufferCopy,
         impulseAudioBufferCopy
       );
@@ -59,7 +69,7 @@ function App() {
     }
   };
 
-  // This method connects the audio node graph each time "nodes" is set
+  // This method configures the audio node graph each time "nodes" is set
   useEffect(() => {
     if (nodes) {
       connectNodes(nodes);
@@ -101,7 +111,7 @@ function App() {
       <Playground>
         <AudioNodeElement title={"Source"} id={"bufferSource"}>
           <Button
-            onClick={doSetup}
+            onClick={onSetup}
             dummy={audioContext || isLoading}
             disabled={audioContext || isLoading}
           >

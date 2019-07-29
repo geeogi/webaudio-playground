@@ -1,5 +1,8 @@
 // Create and configure audio context and nodes
-export const setupNodes = async (songAudioBuffer, impulseAudioBuffer) => {
+export const setupAudioContextAndAudioNodeGraph = async (
+  songAudioBuffer,
+  impulseAudioBuffer
+) => {
   // Initialise AudioContext and audio source
   const AudioContext = window.AudioContext || window.webkitAudioContext;
   const audioContextInstance = new AudioContext();
@@ -30,13 +33,10 @@ export const setupNodes = async (songAudioBuffer, impulseAudioBuffer) => {
   biquadFilterNode.Q.value = 4;
 
   // Configure bufferSourceNode
-  audioContextInstance.decodeAudioData(
-    songAudioBuffer,
-    decodedData => {
-      bufferSourceNode.buffer = decodedData;
-      bufferSourceNode.loop = true;
-    }
-  );
+  audioContextInstance.decodeAudioData(songAudioBuffer, decodedData => {
+    bufferSourceNode.buffer = decodedData;
+    bufferSourceNode.loop = true;
+  });
 
   // Configure convolverNode
   audioContextInstance.decodeAudioData(impulseAudioBuffer, decodedData => {

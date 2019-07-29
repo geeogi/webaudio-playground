@@ -21,8 +21,8 @@ export const AnalyserComponent = props => {
     const max = Math.max(...timeDomainDataArray);
     // Convert 8bit waveform data [0, 255] to voltage [-1,1]
     const maxVoltage = (max - 128) / 128;
-    // Scale to [0,1]
-    const displayVoltage = (maxVoltage + 1) / 2;
+    // Display absolute value
+    const displayVoltage = Math.abs(maxVoltage);
     // Set state to trigger re-render
     setCurrentMaxVoltage(displayVoltage);
   };
@@ -45,7 +45,7 @@ export const AnalyserComponent = props => {
     }
   };
 
-  // These methods reset the visuals
+  // These methods reset the graphics
   const clearLevelMeter = () => {
     setCurrentMaxVoltage(0);
   };
@@ -54,7 +54,7 @@ export const AnalyserComponent = props => {
     context.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
   };
 
-  // This loop retrieves the analysis and triggers the update methods
+  // This loop retrieves the audio analysis and triggers the update methods
   const loop = () => {
     const bufferLength = props.analyserNode.instance.frequencyBinCount;
     const timeDomainDataArray = new Uint8Array(bufferLength);
