@@ -100,34 +100,27 @@ function App() {
       </Box>
       <Playground>
         <AudioNodeElement title={"Source"} id={"bufferSource"}>
-          {isLoading ? (
-            <P>
-              <strong>Loading...</strong>
-            </P>
-          ) : (
-            <>
-              <Button
-                onClick={doSetup}
-                disabled={
-                  audioContext || !songAudioBuffer || !impulseAudioBuffer
-                }
-              >
-                Setup
-              </Button>
-              <Button
-                onClick={handlePlay}
-                disabled={!audioContext || isPlaying}
-              >
-                Play
-              </Button>
-              <Button
-                onClick={handleStop}
-                disabled={!audioContext || !isPlaying}
-              >
-                Stop
-              </Button>
-            </>
-          )}
+          <Button
+            onClick={doSetup}
+            dummy={audioContext || isLoading}
+            disabled={audioContext || isLoading}
+          >
+            Setup
+          </Button>
+          <Button
+            onClick={handlePlay}
+            dummy={!audioContext || isPlaying || isLoading}
+            disabled={!audioContext || isPlaying || isLoading}
+          >
+            Play
+          </Button>
+          <Button
+            onClick={handleStop}
+            dummy={!audioContext || !isPlaying || isLoading}
+            disabled={!audioContext || !isPlaying || isLoading}
+          >
+            Stop
+          </Button>
         </AudioNodeElement>
         <AnalyserComponent
           isHalted={
