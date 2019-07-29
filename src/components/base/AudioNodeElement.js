@@ -34,7 +34,7 @@ const AudioNodeElementContainer = styled.div`
 `;
 
 export const AudioNodeElement = props => {
-  const isEnabled = !props.disabled && !props.bypassed;
+  const IsSwitchedOn = !props.disabled && !props.bypassed;
   const toggleBypassed = () => props.setBypass(props.id, !props.bypassed);
   return (
     <AudioNodeElementContainer
@@ -47,7 +47,7 @@ export const AudioNodeElement = props => {
         <>
           <Switch
             disabled={props.disabled}
-            enabled={isEnabled}
+            IsSwitchedOn={IsSwitchedOn}
             onSwitch={toggleBypassed}
           />
         </>

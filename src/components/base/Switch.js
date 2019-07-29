@@ -2,7 +2,7 @@ import React from "react";
 import { Button } from "./Button";
 
 export const Switch = props => {
-  const variant = props.enabled ? "primary" : "alternative";
+  const variant = props.IsSwitchedOn ? "primary" : "alternative";
   return (
     <Button
       variant={variant}
@@ -10,7 +10,7 @@ export const Switch = props => {
       disabled={props.disabled}
       mb={3}
     >
-      {props.enabled ? "Enabled" : "Disabled"}
+      {props.IsSwitchedOn ? "Enabled" : "Disabled"}
     </Button>
   );
 };
