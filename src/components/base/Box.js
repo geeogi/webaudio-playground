@@ -1,6 +1,4 @@
-import styled from "styled-components";
+import React from "react";
+import { Box as XRCBox } from "xrc";
 
-export const Box = styled.div`
-  padding: 24px;
-  margin: 0;
-`;
+export const Box = props => <XRCBox {...props} p={24} />;

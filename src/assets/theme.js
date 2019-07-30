@@ -1,38 +1,38 @@
-import { DARK_COLOR } from "./colors";
+import { DARK_COLOR, CONTRAST_COLOR, ACTIVE_COLOR } from "./colors";
 
 export const Theme = {
   colors: {
     brand: [
       {
         alias: "primary",
-        value: "#00B67D"
+        value: ACTIVE_COLOR
       },
       {
         alias: "secondary",
-        value: "#FF6A00"
+        value: null
       }
     ],
     text: {
-      main: "#202020",
-      link: "#00B67D",
-      alt: "#666666",
-      inv: "#FFFFFF"
+      main: CONTRAST_COLOR,
+      link: ACTIVE_COLOR,
+      alt: null,
+      inv: null
     },
     fill: {
-      main: "#F7F4EF",
-      alt: "#DDDAD4",
-      inv: "#FFFFFF",
-      invAlt: "#D8D8D8",
-      debug: "rgba(0,153,255,0.25)"
+      main: null,
+      alt: null,
+      inv: null,
+      invAlt: null,
+      debug: null
     },
     status: {
-      info: "#0277BD",
-      success: "#00B67D",
-      failure: "#D50000"
+      info: null,
+      success: null,
+      failure: null
     },
     overlay: {
-      dark: "rgba(32,32,32,0.64)",
-      medium: "rgba(32,32,32,0.32)",
+      dark: null,
+      medium: null,
       light: "rgba(32,32,32,0.08)"
     }
   },

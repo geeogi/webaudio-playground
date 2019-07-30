@@ -1,8 +1,4 @@
-import styled from "styled-components";
-import { CONTRAST_COLOR } from "../../assets/colors";
+import React from "react";
+import { Heading as XRCHeading } from "xrc";
 
-export const H1 = styled.h1`
-  color: ${CONTRAST_COLOR};
-  padding: 0;
-  margin: 0;
-`;
+export const H1 = props => <XRCHeading {...props} mb={0} />;

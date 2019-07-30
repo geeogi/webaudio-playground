@@ -1,8 +1,4 @@
-import styled from "styled-components";
-import { CONTRAST_COLOR } from "../../assets/colors";
+import React from "react";
+import { Text as XRCText } from "xrc";
 
-export const P = styled.p`
-  color: ${CONTRAST_COLOR};
-  padding: 0;
-  margin: 0;
-`;
+export const P = props => <XRCText {...props} mb={0} />;
