@@ -1,15 +1,13 @@
 import React from "react";
-import ReactDOM from "react-dom";
-import "./index.css";
-import App from "./App";
+import { render } from "react-snapshot";
 import { Base } from "xrc";
+import App from "./App";
 import { Theme } from "./assets/theme";
+import "./index.css";
 
 const rootElement = document.getElementById("root");
 
-const renderMethod = !!module.hot ? ReactDOM.render : ReactDOM.hydrate;
-
-renderMethod(
+render(
   <Base theme={Theme}>
     <App />
   </Base>,
