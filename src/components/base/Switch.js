@@ -2,7 +2,7 @@ import React from "react";
 import { Button } from "./Button";
 
 export const Switch = props => {
-  const variant = props.IsSwitchedOn ? "primary" : "alternative";
+  const variant = props.IsSwitchedOn ? "primary" : "secondary";
   return (
     <Button
       variant={variant}
