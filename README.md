@@ -24,8 +24,7 @@ The [webaudio API](https://www.w3.org/TR/webaudio/) is a system for playing and 
 
 - Download the code: `git clone git@github.com:geeogi/webaudio-playground.git`
 - Navigate to the project: `cd webaudio-playground` 
-- Build the image for development: `docker build -t webaudio-playground-container .` 
-- Start the container: `docker run -it -v $(pwd):/app -p 3000:3000 webaudio-playground-container` 
+- Start the container: `docker-compose up` 
 
 ## Deploy
 
