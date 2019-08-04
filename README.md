@@ -5,8 +5,29 @@ The [webaudio API](https://www.w3.org/TR/webaudio/) is a system for playing and 
 ## Try it out
 
 - Visit the [playground](https://webaudio-playground.netlify.com)
-- Click "initialise" and then "play" to get started
+- Click "setup" and then "play" to get started
 - Enable and disable audio nodes and play with the controls
 - View the source code to see how the audio nodes are configured using the webaudio API
 
 > Warning: the playground produces sound and it get's loud sometimes. 
+
+## Development
+
+### Node
+
+- Download the code: `git clone git@github.com:geeogi/webaudio-playground.git`
+- Navigate to the project: `cd webaudio-playground` 
+- Install dependencies: `npm install` 
+- Start the development server: `npm run start` 
+
+### Docker
+
+- Download the code: `git clone git@github.com:geeogi/webaudio-playground.git`
+- Navigate to the project: `cd webaudio-playground` 
+- Build the image for development: `docker build -t webaudio-playground-container .` 
+- Start the container: `docker run -it -v $(pwd):/app -p 3000:3000 webaudio-playground-container` 
+
+## Deploy
+
+- Build the project as a static website: `yarn build` 
+- Serve the `/build` directory 
