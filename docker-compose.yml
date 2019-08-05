@@ -3,6 +3,8 @@ services:
   app:
     build: .
     volumes:
-      - ./:/app
+      - ./src:/app/src
+      - ./public:/app/public
     ports:
       - "3000:3000"
+    command: ["yarn", "start"]  

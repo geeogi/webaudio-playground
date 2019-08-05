@@ -6,5 +6,3 @@ ADD yarn.lock /app/yarn.lock
 
 WORKDIR /app
 RUN yarn
-
-CMD ["yarn", "start"]
