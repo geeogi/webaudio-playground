@@ -1,6 +1,8 @@
-// Connect all nodes in the node graph, skipping the bypassed nodes
+/*
+** Reset and connect all nodes in the node graph, skipping the bypassed nodes
+*/
 export const connectNodes = nodeGraph => {
-  // Map node graph object to an array ordered by node position
+  // Map node graph object to an array of nodes ordered by node position
   const nodeArray = Object.values(nodeGraph).sort(
     (a, b) => a.position > b.position
   );

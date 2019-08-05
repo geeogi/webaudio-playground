@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { AudioNodeElement } from "../base/AudioNodeElement";
 
 export const WaveShaperComponent = props => {
-  // Set curve
+  // Set curve on component load
   useEffect(() => {
     if (props.waveShaperNode) {
       const curve = new Float32Array(256);

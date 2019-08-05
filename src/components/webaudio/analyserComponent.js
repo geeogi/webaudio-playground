@@ -2,17 +2,16 @@ import React, { useEffect, useRef, useState } from "react";
 import { AudioNodeElement } from "../base/AudioNodeElement";
 import { Canvas } from "../base/Canvas";
 
-export const AnalyserComponent = props => {
-  // Constants
-  const CANVAS_WIDTH = 100;
-  const CANVAS_HEIGHT = 40;
+const CANVAS_WIDTH = 100;
+const CANVAS_HEIGHT = 40;
 
-  // State
+export const AnalyserComponent = props => {
+
   const [looping, setLooping] = useState(false);
   const [animationFrameId, setAnimationFrameId] = useState(false);
   const [currentMaxVoltage, setCurrentMaxVoltage] = useState(0);
 
-  // Elements
+  // Element reference
   const frequencyCanvas = useRef();
 
   // This method calculates and sets the current voltage level
@@ -45,7 +44,7 @@ export const AnalyserComponent = props => {
     }
   };
 
-  // These methods reset the graphics
+  // These methods reset the charts
   const clearLevelMeter = () => {
     setCurrentMaxVoltage(0);
   };
