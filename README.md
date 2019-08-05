@@ -30,3 +30,9 @@ The [webaudio API](https://www.w3.org/TR/webaudio/) is a system for playing and 
 
 - Build the project as a static website: `yarn build` 
 - Serve the `/build` directory 
+
+## References 
+
+- https://www.w3.org/TR/webaudio/
+- https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API
+- https://padenot.github.io/web-audio-perf/
