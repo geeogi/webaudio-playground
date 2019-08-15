@@ -20,12 +20,6 @@ The [webaudio API](https://www.w3.org/TR/webaudio/) is a system for playing and 
 - Install dependencies: `npm install` 
 - Start the development server: `npm run start` 
 
-### Docker
-
-- Download the code: `git clone git@github.com:geeogi/webaudio-playground.git`
-- Navigate to the project: `cd webaudio-playground` 
-- Start the container: `docker-compose up` 
-
 ## Deploy
 
 - Build the project as a static website: `yarn build` 
