@@ -19,7 +19,7 @@ export const GainComponent = props => {
         name="gain"
         type="range"
         min="0"
-        max="3"
+        max="1.5"
         defaultValue="1"
         step="0.01"
         onChange={handleGainChange}
